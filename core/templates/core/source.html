@@ -5,3 +5,47 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Source</title>
 <link rel="stylesheet" href="/static/core/css/style.css">
+</head>
+<body class="lp-body">
+  <div data-include="nav"></div>
+
+  <main class="source-main">
+    <p class="eyebrow">Data transparency</p>
+    <h1 class="reading-title">Sources used by HealthAge</h1>
+    <p class="reading-lead">HealthAge uses public Malaysian health statistics to prioritise one practical next step. The result is informational and should not be read as a medical diagnosis.</p>
+
+    <section class="source-grid">
+      <article class="source-card">
+        <p class="source-tag">Mortality</p>
+        <h2>DOSM Statistics on Causes of Death</h2>
+        <p>Used to identify leading causes of death by demographic group when matching a user profile.</p>
+        <a href="https://open.dosm.gov.my/" target="_blank" rel="noopener">Open DOSM</a>
+      </article>
+
+      <article class="source-card">
+        <p class="source-tag">Risk factors</p>
+        <h2>National Health and Morbidity Survey 2023</h2>
+        <p>Used for population-level context such as hypertension, cholesterol and diabetes prevalence.</p>
+        <a href="https://iku.nih.gov.my/nhms" target="_blank" rel="noopener">Open NHMS</a>
+      </article>
+
+      <article class="source-card" id="peka">
+        <p class="source-tag">Screening</p>
+        <h2>PeKaB40 / KKMNOW screening data</h2>
+        <p>Used to explain why health screening is often the first practical action for eligible adults.</p>
+        <a href="https://protecthealth.com.my/peka-b40/" target="_blank" rel="noopener">Open PeKaB40</a>
+      </article>
+    </section>
+
+    {% if result %}
+    <section class="detail-panel">
+      <h2>Your current result source note</h2>
+      <p>{{ result.top_risk.note }}</p>
+    </section>
+    {% endif %}
+  </main>
+
+  <div data-include="footer"></div>
+  <script src="/static/core/js/include.js"></script>
+</body>
+</html>

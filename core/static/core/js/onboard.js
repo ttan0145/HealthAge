@@ -1,5 +1,5 @@
-document.querySelectorAll(".chip").forEach((chip) => {
-  chip.addEventListener("click", () => {
-    chip.classList.toggle("chip--active");
+document.querySelectorAll(".chip-input").forEach((input) => {
+  input.addEventListener("change", () => {
+    input.closest(".chip").classList.toggle("chip--active", input.checked);
   });
 });

@@ -5,3 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Read More</title>
 <link rel="stylesheet" href="/static/core/css/style.css">
+</head>
+<body class="lp-body">
+  <div data-include="nav"></div>
+
+  <main class="reading-main">
+    <a href="/dashboard/" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to result
+    </a>
+
+    <p class="eyebrow">{{ result.top_risk.level }} priority</p>
+    <h1 class="reading-title">{{ result.top_risk.name }}</h1>
+    <p class="reading-lead">{{ result.top_risk.detail }}</p>
+
+    <section class="detail-panel">
+      <h2>Why this was prioritised</h2>
+      <p>{{ result.query_label }}</p>
+      <p>{{ result.top_risk.note }}</p>
+    </section>
+
+    <section class="detail-panel detail-panel--amber">
+      <h2>What this means</h2>
+      <p>This result is a signal for what to check first, not a diagnosis. If you have symptoms, an existing condition, or a recent abnormal result, speak with a health professional.</p>
+    </section>
+
+    <section class="detail-panel">
+      <h2>Suggested next step</h2>
+      <p><strong>{{ result.recommended_action.title }}.</strong> {{ result.recommended_action.subtitle }}</p>
+      <a class="btn-primary btn-inline" href="{{ result.recommended_action.target }}">Open next step</a>
+    </section>
+  </main>
+
+  <div data-include="footer"></div>
+  <script src="/static/core/js/include.js"></script>
+</body>
+</html>

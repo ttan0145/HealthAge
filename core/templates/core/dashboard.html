@@ -3,54 +3,95 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard</title>
+<title>Your HealthAge result</title>
 <link rel="stylesheet" href="/static/core/css/style.css">
 </head>
-<body>
+<body class="lp-body">
 
   <div data-include="nav"></div>
 
-  <main style="width:100%; max-width: 100%;">
-
-    <!-- Loading state, briefly shown then swapped for the top-risk card -->
-    <section class="card card--matching" id="matching-card" style="padding: 64px 72px 96px">
-      <div class="matching-head">
-        <span class="spinner" aria-hidden="true"></span>
-        <h2 class="matching-title">Matching your profile</h2>
-      </div>
-      <p class="matching-detail">Comparing men aged 48 in Selangor against DOSM causes of death, 2021 to 2024.</p>
+  <main class="result-main">
+    <section class="info-banner disclaimer-banner">
+      <span class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </span>
+      <p><strong>This is not a diagnosis.</strong> HealthAge compares your profile with public Malaysian health statistics. It does not predict individual outcomes.</p>
     </section>
 
-    <div style="padding: 20px 28px 56px;">
-    <div id="next-action-area">
-      <div class="section-heading"></div>
-      <div class="skeleton-block skeleton-block--action">
-        <span class="sk-swatch"></span>
-        <span class="sk-lines">
-          <span class="sk-line sk-line--full"></span>
-          <span class="sk-line sk-line--short"></span>
-        </span>
+    <section class="card card--risk result-hero">
+      <div>
+        <p class="eyebrow">Your top risk</p>
+        <h1 class="risk-title">{{ result.top_risk.name }}</h1>
+        <p class="risk-desc">{{ result.top_risk.description }}</p>
+        <div class="risk-note">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </span>
+          <span>{{ result.top_risk.note }}</span>
+        </div>
+        <a class="btn-readmore" href="/readmore/">
+          Read more
+          <span class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </span>
+        </a>
       </div>
-    </div>
+      <aside class="profile-summary">
+        <p class="eyebrow">Matched profile</p>
+        <p class="profile-summary-name">{{ result.profile.name }}</p>
+        <p>{{ result.profile.summary }}</p>
+        <p class="mode-pill">{{ result.mode }}</p>
+      </aside>
+    </section>
 
-
-    <div class="risks-grid" id="other-risks-panel" style="margin-top: 20px">
-      
-        <div class="skeleton-block skeleton-block--action">
-        <span class="sk-swatch"></span>
-        <span class="sk-lines">
-          <span class="sk-line sk-line--full"></span>
-          <span class="sk-line sk-line--short"></span>
-        </span>
-
+    <section class="result-section">
+      <div class="section-heading">
+        <h2>What to do next</h2>
       </div>
-    </div>
+      <a class="action-card action-card--{{ result.recommended_action.type }}" href="{{ result.recommended_action.target }}">
+        <span class="action-icon">
+          {% if result.recommended_action.type == "routine" %}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="M9 20l2-6 3 2 2 5"/><path d="M6 14l4-3 2 3 4-2"/></svg>
+          {% else %}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M6 3H4"/><path d="M14 3h2"/><path d="M10 13v3a5 5 0 0 0 10 0v-1"/><circle cx="20" cy="15" r="2"/></svg>
+          {% endif %}
+        </span>
+        <span class="action-body">
+          <span class="action-title">{{ result.recommended_action.title }}</span>
+          <span class="action-subtitle">{{ result.recommended_action.subtitle }}</span>
+        </span>
+        <span class="icon action-chevron">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+      </a>
+    </section>
+
+    <section class="result-section">
+      <div class="section-heading">
+        <h2>Other risks we checked</h2>
+      </div>
+      <div class="risk-cards">
+        {% for risk in result.other_risks %}
+        <a class="risk-card" href="/readmore/">
+          <div class="risk-card-top">
+            <span class="risk-card-name">{{ risk.name }}</span>
+            <span class="risk-card-right">
+              <span class="badge badge--{{ risk.level }}">{{ risk.level }}</span>
+              <span class="icon icon--chevron">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </span>
+            </span>
+          </div>
+          <p class="risk-card-desc">{{ risk.description }}</p>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
 
   </main>
 
   <div data-include="footer"></div>
 
   <script src="/static/core/js/include.js"></script>
-  <script src="/static/core/js/dashboard.js"></script>
 </body>
 </html>

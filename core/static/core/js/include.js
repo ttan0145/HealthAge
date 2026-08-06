@@ -15,12 +15,12 @@ async function loadIncludes() {
   );
 
   markActiveNavLink();
-  setFooterYear();
 }
 
 function markActiveNavLink() {
-  document.querySelectorAll(".lp-topnav-item[data-page]").forEach((link) => {
-    if (link.getAttribute("data-page") === location.pathname) {
+  document.querySelectorAll(".lp-topnav-item[href]").forEach((link) => {
+    const linkPath = new URL(link.getAttribute("href"), location.origin).pathname;
+    if (linkPath === location.pathname) {
       link.classList.add("lp-topnav-item--active");
     }
   });

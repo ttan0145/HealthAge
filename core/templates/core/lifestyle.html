@@ -23,24 +23,31 @@
 
       <p class="onboard-step">Step 2 of 2. Tap each one that applies to you. It's okay if several apply, there's no wrong answer.</p>
 
-      <p class="chip-group-label">Which apply to you?</p>
-      <div class="chip-group">
-        <button type="button" class="chip">Smoking</button>
-        <button type="button" class="chip chip--active">Rarely exercise</button>
-        <button type="button" class="chip">Irregular meals</button>
-        <button type="button" class="chip">Sleep late</button>
-        <button type="button" class="chip chip--active">High work stress</button>
-        <button type="button" class="chip chip--active">No recent screening</button>
-      </div>
+      <form class="onboard-form" action="/lifestyle/" method="post">
+        {% csrf_token %}
+        <p class="chip-group-label">Which apply to you?</p>
+        <div class="chip-group">
+          {% for option in habit_options %}
+          <label class="chip {% if option in lifestyle.habits %}chip--active{% endif %}">
+            <input class="chip-input" type="checkbox" name="habits" value="{{ option }}" {% if option in lifestyle.habits %}checked{% endif %}>
+            <span>{{ option }}</span>
+          </label>
+          {% endfor %}
+        </div>
+        {% if errors.habits %}<p class="field-error field-error--chips">{{ errors.habits }}</p>{% endif %}
 
-      <p class="chip-group-label">Family history of these conditions</p>
-      <div class="chip-group">
-        <button type="button" class="chip chip--active">Heart disease</button>
-        <button type="button" class="chip">Diabetes</button>
-        <button type="button" class="chip">Cancer</button>
-      </div>
+        <p class="chip-group-label">Family history of these conditions</p>
+        <div class="chip-group">
+          {% for option in family_history_options %}
+          <label class="chip {% if option in lifestyle.family_history %}chip--active{% endif %}">
+            <input class="chip-input" type="checkbox" name="family_history" value="{{ option }}" {% if option in lifestyle.family_history %}checked{% endif %}>
+            <span>{{ option }}</span>
+          </label>
+          {% endfor %}
+        </div>
 
-      <a href="/dashboard/" class="btn-primary btn-block">See my action plan</a>
+        <button type="submit" class="btn-primary btn-block">See my action plan</button>
+      </form>
 
     </div>
   </div>
