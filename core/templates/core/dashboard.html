@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+<link rel="stylesheet" href="/static/core/css/style.css">
+</head>
+<body>
+
+  <div data-include="nav"></div>
+
+  <main style="width:100%; max-width: 100%;">
+
+    <!-- Loading state, briefly shown then swapped for the top-risk card -->
+    <section class="card card--matching" id="matching-card" style="padding: 64px 72px 96px">
+      <div class="matching-head">
+        <span class="spinner" aria-hidden="true"></span>
+        <h2 class="matching-title">Matching your profile</h2>
+      </div>
+      <p class="matching-detail">Comparing men aged 48 in Selangor against DOSM causes of death, 2021 to 2024.</p>
+    </section>
+
+    <div style="padding: 20px 28px 56px;">
+    <div id="next-action-area">
+      <div class="section-heading"></div>
+      <div class="skeleton-block skeleton-block--action">
+        <span class="sk-swatch"></span>
+        <span class="sk-lines">
+          <span class="sk-line sk-line--full"></span>
+          <span class="sk-line sk-line--short"></span>
+        </span>
+      </div>
+    </div>
+
+
+    <div class="risks-grid" id="other-risks-panel" style="margin-top: 20px">
+      
+        <div class="skeleton-block skeleton-block--action">
+        <span class="sk-swatch"></span>
+        <span class="sk-lines">
+          <span class="sk-line sk-line--full"></span>
+          <span class="sk-line sk-line--short"></span>
+        </span>
+
+      </div>
+    </div>
+
+  </main>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/core/js/include.js"></script>
+  <script src="/static/core/js/dashboard.js"></script>
+</body>
+</html>

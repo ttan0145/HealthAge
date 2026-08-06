@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your profile</title>
+<link rel="stylesheet" href="/static/core/css/style.css">
+</head>
+
+<body class="lp-body">
+  <div data-include="nav"></div>
+
+  <div class="onboard-shell">
+    <div class="onboard-card">
+      
+      <a href="/" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </a>
+
+      <h1 class="onboard-heading">Your profile</h1>
+      <div class="onboard-rule"></div>
+
+      <p class="onboard-step">Step 1 of 2. Tell us a little about yourself so we can compare you to real health data.</p>
+
+      <form class="onboard-form" action="/lifestyle/">
+        <label class="field-label" for="full_name">Full name</label>
+        <input class="field-input" type="text" id="full_name" name="full_name" value="Lim Wei Jian">
+
+        <label class="field-label" for="age">Age</label>
+        <input class="field-input" type="text" id="age" name="age" value="48">
+
+        <label class="field-label" for="gender">Gender</label>
+        <input class="field-input" type="text" id="gender" name="gender" value="Male">
+
+        <label class="field-label" for="state">State</label>
+        <input class="field-input" type="text" id="state" name="state" value="Selangor">
+
+        <button type="submit" class="btn-primary btn-block">Continue</button>
+      </form>
+
+    </div>
+  </div>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/core/js/include.js"></script>
+</body>
+</html>
