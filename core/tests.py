@@ -4,7 +4,8 @@ from django.conf import settings
 from django.test import SimpleTestCase, TestCase
 from django.urls import reverse
 
-from .health_data_gateway import _database_is_configured
+from .health_data_gateway import _database_is_configured, _row_cause_name
+from .risk_engine import build_risk_result
 from .stayfit_api import build_stayfit_routine
 
 
@@ -18,6 +19,36 @@ class HealthDataGatewayConfigurationTests(SimpleTestCase):
         databases = {"default": {"ENGINE": "django.db.backends.sqlite3"}}
         with patch.dict(settings.DATABASES, databases, clear=True):
             self.assertFalse(_database_is_configured())
+
+    def test_cause_id_is_not_used_as_cause_name(self):
+        cause_name = _row_cause_name(
+            {"cause_id": 12},
+            cause_col=None,
+            cause_id_col="cause_id",
+            cause_lookup={},
+        )
+
+        self.assertEqual(cause_name, "")
+
+    @patch("core.risk_engine.fetch_mortality_match")
+    def test_unknown_database_cause_falls_back_to_known_copy(self, mortality_match):
+        mortality_match.return_value = type(
+            "MortalityMatch",
+            (),
+            {
+                "cause_id": 12,
+                "cause_name": "12",
+                "source_table": "mortality_record",
+                "fallback_used": False,
+            },
+        )()
+
+        result = build_risk_result(
+            {"age": 48, "sex": "Male", "state": "Selangor"},
+            {"habits": ["Rarely exercise"], "family_history": []},
+        )
+
+        self.assertIn(result["top_risk"]["name"], {"Heart disease", "Stroke", "Type 2 diabetes", "Cancer", "Respiratory disease"})
 
     @patch("core.stayfit_api._database_exercise_pool")
     def test_stayfit_routine_prefers_database_exercise_pool(self, database_pool):

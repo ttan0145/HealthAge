@@ -127,6 +127,8 @@ def build_risk_result(profile: dict[str, Any], lifestyle: dict[str, list[str]]) 
     db_match = fetch_mortality_match(profile_obj.age, profile_obj.sex, profile_obj.state)
     if db_match:
         top_cause = _canonical_cause(db_match.cause_name) or db_match.cause_name
+        if top_cause not in RISK_COPY:
+            top_cause = _fallback_top_cause(profile_obj, habits, family_history)
         source_note = _database_source_note(db_match.source_table, db_match.fallback_used)
         mode = "Connected database"
     else:
