@@ -25,10 +25,6 @@
 
       <form class="onboard-form" action="/profile/" method="post" novalidate>
         {% csrf_token %}
-        <label class="field-label" for="full_name">Full name</label>
-        <input class="field-input" type="text" id="full_name" name="full_name" value="{{ profile.name|default:'' }}" placeholder="Lim Wei Jian">
-        {% if errors.full_name %}<p class="field-error">{{ errors.full_name }}</p>{% endif %}
-
         <label class="field-label" for="age">Age</label>
         <input class="field-input" type="number" id="age" name="age" min="18" max="100" value="{{ profile.age|default:'' }}" placeholder="48">
         {% if errors.age %}<p class="field-error">{{ errors.age }}</p>{% endif %}

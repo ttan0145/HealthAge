@@ -118,6 +118,12 @@ The current tests cover:
 
 By default, `manage.py test` uses a local SQLite test database even when Neon environment variables are present. This prevents Django from creating or dropping test databases on the shared Neon project. Set `ALLOW_REMOTE_TEST_DATABASE=True` only if the team explicitly wants to run tests against Postgres.
 
+## Delivery Tracking
+
+User stories are implemented and verified separately so each change can be reviewed and managed independently:
+
+- [US 1.1 - Quick Profile Intake](docs/user-stories/US-1.1-quick-profile-intake.md)
+
 ## Database Notes
 
 The current code reserves interfaces for the ERD shared by the team:

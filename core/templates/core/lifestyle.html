@@ -21,11 +21,11 @@
       <h1 class="onboard-heading">Lifestyle habits</h1>
       <div class="onboard-rule"></div>
 
-      <p class="onboard-step">Step 2 of 2. Tap each one that applies to you. It's okay if several apply, there's no wrong answer.</p>
+      <p class="onboard-step">Step 2 of 2. Choose the one or two habits that best describe your current lifestyle.</p>
 
       <form class="onboard-form" action="/lifestyle/" method="post">
         {% csrf_token %}
-        <p class="chip-group-label">Which apply to you?</p>
+        <p class="chip-group-label">Which one or two habits apply to you?</p>
         <div class="chip-group">
           {% for option in habit_options %}
           <label class="chip {% if option in lifestyle.habits %}chip--active{% endif %}">
@@ -45,6 +45,7 @@
           </label>
           {% endfor %}
         </div>
+        {% if errors.family_history %}<p class="field-error field-error--chips">{{ errors.family_history }}</p>{% endif %}
 
         <button type="submit" class="btn-primary btn-block">See my action plan</button>
       </form>

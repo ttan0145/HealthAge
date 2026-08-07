@@ -610,6 +610,10 @@ body {
   border-color: var(--green-strong);
   color: var(--green-text);
 }
+.chip--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
 
 @media (max-width: 560px) {
   .onboard-card { padding: 32px 24px 36px; }

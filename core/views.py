@@ -1,28 +1,11 @@
 from django.shortcuts import redirect, render
 
-from .risk_engine import build_risk_result, validate_profile
-
-
-MALAYSIA_STATES = [
-    "Johor",
-    "Kedah",
-    "Kelantan",
-    "Melaka",
-    "Negeri Sembilan",
-    "Pahang",
-    "Penang",
-    "Perak",
-    "Perlis",
-    "Sabah",
-    "Sarawak",
-    "Selangor",
-    "Terengganu",
-    "W.P. Kuala Lumpur",
-    "W.P. Labuan",
-    "W.P. Putrajaya",
-]
-
-SEX_OPTIONS = ["Male", "Female"]
+from .risk_engine import (
+    MALAYSIA_STATES,
+    SEX_OPTIONS,
+    build_risk_result,
+    validate_profile,
+)
 
 HABIT_OPTIONS = [
     "Smoking",
@@ -46,14 +29,12 @@ def profile(request):
     if request.method == "POST":
         profile_obj, errors = validate_profile(request.POST)
         current = {
-            "name": request.POST.get("full_name", "").strip(),
             "age": request.POST.get("age", "").strip(),
             "sex": request.POST.get("sex", request.POST.get("gender", "")).strip(),
             "state": request.POST.get("state", "").strip(),
         }
         if not errors and profile_obj:
             request.session["profile"] = {
-                "name": profile_obj.name,
                 "age": profile_obj.age,
                 "sex": profile_obj.sex,
                 "state": profile_obj.state,
@@ -83,15 +64,24 @@ def lifestyle(request):
     errors = {}
 
     if request.method == "POST":
-        habits = request.POST.getlist("habits")
-        family_history = request.POST.getlist("family_history")
+        habits = list(dict.fromkeys(request.POST.getlist("habits")))
+        family_history = list(dict.fromkeys(request.POST.getlist("family_history")))
+        current = {
+            "habits": habits,
+            "family_history": family_history,
+        }
+
         if not habits:
-            errors["habits"] = "Choose at least one habit so the recommendation can be prioritised."
-        else:
-            current = {
-                "habits": habits,
-                "family_history": family_history,
-            }
+            errors["habits"] = "Choose one or two habits so the recommendation can be prioritised."
+        elif len(habits) > 2:
+            errors["habits"] = "Choose no more than two habits."
+        elif any(habit not in HABIT_OPTIONS for habit in habits):
+            errors["habits"] = "Choose habits from the available options."
+
+        if any(condition not in FAMILY_HISTORY_OPTIONS for condition in family_history):
+            errors["family_history"] = "Choose conditions from the available options."
+
+        if not errors:
             request.session["lifestyle"] = current
             request.session["risk_result"] = build_risk_result(request.session["profile"], current)
             request.session.modified = True

@@ -62,10 +62,30 @@ DEFAULT_SOURCES = [
     "KKMNOW / ProtectHealth PeKaB40 screening information",
 ]
 
+MALAYSIA_STATES = [
+    "Johor",
+    "Kedah",
+    "Kelantan",
+    "Melaka",
+    "Negeri Sembilan",
+    "Pahang",
+    "Penang",
+    "Perak",
+    "Perlis",
+    "Sabah",
+    "Sarawak",
+    "Selangor",
+    "Terengganu",
+    "W.P. Kuala Lumpur",
+    "W.P. Labuan",
+    "W.P. Putrajaya",
+]
+
+SEX_OPTIONS = ["Male", "Female"]
+
 
 @dataclass(frozen=True)
 class Profile:
-    name: str
     age: int
     sex: str
     state: str
@@ -73,13 +93,10 @@ class Profile:
 
 def validate_profile(data: dict[str, Any]) -> tuple[Profile | None, dict[str, str]]:
     errors: dict[str, str] = {}
-    name = str(data.get("full_name", "")).strip()
     sex = str(data.get("sex", data.get("gender", ""))).strip()
     state = str(data.get("state", "")).strip()
     age_raw = str(data.get("age", "")).strip()
 
-    if not name:
-        errors["full_name"] = "Enter your name."
     try:
         age = int(age_raw)
     except ValueError:
@@ -88,19 +105,18 @@ def validate_profile(data: dict[str, Any]) -> tuple[Profile | None, dict[str, st
     else:
         if age < 18 or age > 100:
             errors["age"] = "Age must be between 18 and 100."
-    if not sex:
-        errors["sex"] = "Choose a sex."
-    if not state:
-        errors["state"] = "Choose a state."
+    if sex not in SEX_OPTIONS:
+        errors["sex"] = "Choose a valid sex."
+    if state not in MALAYSIA_STATES:
+        errors["state"] = "Choose a valid Malaysian state."
 
     if errors:
         return None, errors
-    return Profile(name=name, age=age, sex=sex, state=state), {}
+    return Profile(age=age, sex=sex, state=state), {}
 
 
 def build_risk_result(profile: dict[str, Any], lifestyle: dict[str, list[str]]) -> dict[str, Any]:
     profile_obj = Profile(
-        name=profile.get("name", "User"),
         age=int(profile.get("age", 48)),
         sex=profile.get("sex", "Male"),
         state=profile.get("state", "Selangor"),
@@ -126,7 +142,6 @@ def build_risk_result(profile: dict[str, Any], lifestyle: dict[str, list[str]]) 
     return {
         "mode": mode,
         "profile": {
-            "name": profile_obj.name,
             "age": profile_obj.age,
             "sex": profile_obj.sex,
             "state": profile_obj.state,
