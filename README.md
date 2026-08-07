@@ -15,8 +15,9 @@ The current implementation is designed to run with or without the team Neon data
 4. Dashboard shows the top risk, one recommended action, other assessed risks, and a non-diagnosis disclaimer.
 5. Read More explains the prioritised risk in plain language.
 6. Source lists the public datasets used by the MVP.
-7. Stay Fit renders a dynamic routine for the exercise action path, including an exercise list, timer, guidance panel, exercise detail modal, and swap interaction.
-8. Stay Fit API returns a stable routine JSON contract for the page, with Neon exercise-table support and a local fallback pool.
+7. Stay Fit lets the user choose a health focus such as Heart disease, Stroke, Type 2 diabetes, Respiratory disease, or Cancer.
+8. Stay Fit renders a dynamic routine for the selected focus, including an exercise list, timer, guidance panel, exercise detail modal, and swap interaction.
+9. Stay Fit API returns a stable routine JSON contract for the page, with Neon exercise-table support and a local fallback pool.
 
 ## Project Structure
 
@@ -109,7 +110,8 @@ Stay Fit API endpoints:
 
 ```text
 http://127.0.0.1:8000/api/stayfit/routine/
-http://127.0.0.1:8000/api/stayfit/reshuffle/?current=step_jack
+http://127.0.0.1:8000/api/stayfit/routine/?risk=heart_disease
+http://127.0.0.1:8000/api/stayfit/reshuffle/?current=step_jack&risk=heart_disease
 ```
 
 ## Stay Fit Collaboration Handoff
@@ -127,9 +129,11 @@ Useful handoff documents:
 
 Current Stay Fit status:
 
-- The page consumes `/api/stayfit/routine/` instead of hardcoded exercise rows.
+- The page shows disease/risk focus buttons and consumes `/api/stayfit/routine/?risk=<risk_key>` instead of hardcoded exercise rows.
+- The current supported focus keys are `heart_disease`, `stroke`, `type_2_diabetes`, `respiratory_disease`, and `cancer`.
+- The Stay Fit focus choice is not saved to the database or session; it only travels as a request query parameter.
 - Exercise details are displayed in a modal using image/video fields when available and written instructions as fallback.
-- Swap calls `/api/stayfit/reshuffle/` and replaces only one exercise row.
+- Swap calls `/api/stayfit/reshuffle/` with the current focus and replaces only one exercise row.
 - Timer logic is implemented in `stayfit.js`, not in the shared include script.
 - The latest `main` mascot image has been integrated into the guidance panel.
 
@@ -147,7 +151,7 @@ The current tests cover:
 - Profile and lifestyle submission into a dashboard result.
 - Read More redirect behavior when no result exists.
 - Public Source page rendering.
-- Stay Fit routine API contract, reshuffle API, and dynamic page hooks.
+- Stay Fit routine API contract, disease-focus routine selection, reshuffle API, and dynamic page hooks.
 - Stay Fit database-preferred exercise pool with local fallback.
 
 By default, `manage.py test` uses a local SQLite test database even when Neon environment variables are present. This prevents Django from creating or dropping test databases on the shared Neon project. Set `ALLOW_REMOTE_TEST_DATABASE=True` only if the team explicitly wants to run tests against Postgres.
@@ -172,6 +176,8 @@ The current code reserves interfaces for the ERD shared by the team:
 The live Neon database may still differ from this design. `health_data_gateway.py` currently inspects available table and column names defensively, preferring the ERD names while still tolerating imported names such as `death_records` and `causes_of_death`. Once the team confirms the exact production schema, the gateway should be tightened to explicit SQL queries.
 
 The MVP stores `User_Profile` and `Match_Result` data in the Django session for now. Persisting those records should be added only after the team confirms whether session-only behaviour remains acceptable for the onboarding iteration.
+
+Stay Fit does not persist the disease/risk focus selection. The page sends a `risk` query parameter to the API and updates the visible routine only for the current browser request.
 
 Stay Fit exercise data currently supports two modes:
 

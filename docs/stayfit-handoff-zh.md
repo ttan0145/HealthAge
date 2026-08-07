@@ -5,8 +5,8 @@
 Stay Fit 已经有一版可运行 MVP：
 
 - 页面：`/stayfit/`
-- routine API：`/api/stayfit/routine/`
-- reshuffle API：`/api/stayfit/reshuffle/?current=step_jack`
+- routine API：`/api/stayfit/routine/?risk=heart_disease`
+- reshuffle API：`/api/stayfit/reshuffle/?current=step_jack&risk=heart_disease`
 - 前端 JS：`core/static/core/js/stayfit.js`
 - 后端数据/API：`core/stayfit_api.py`
 - 中文 API 说明：`docs/stayfit-api-contract-zh.md`
@@ -14,6 +14,8 @@ Stay Fit 已经有一版可运行 MVP：
 
 当前页面已经支持：
 
+- 在 Stay Fit 页面选择疾病/风险 focus：Heart disease、Stroke、Type 2 diabetes、Respiratory disease、Cancer
+- 根据选中的 focus 调用不同 routine；选择只作为 query 参数传递，不保存到数据库或 session
 - 从 API 动态加载四个 exercise
 - 点击 exercise 打开 detail modal
 - modal 显示 instructions / equipment / muscles / image fallback
@@ -34,6 +36,7 @@ Stay Fit 已经有一版可运行 MVP：
 ```text
 http://127.0.0.1:8000/stayfit/
 http://127.0.0.1:8000/api/stayfit/routine/
+http://127.0.0.1:8000/api/stayfit/routine/?risk=respiratory_disease
 ```
 
 运行测试：
@@ -55,6 +58,7 @@ core/static/core/css/style.css
 她可以继续做：
 
 - UI polish，让页面更贴近 Figma/截图
+- Health focus 按钮的视觉细节和移动端排版
 - Timer 圆环视觉细化
 - Modal 动画和排版优化
 - 图片缺失时的 fallback 视觉
@@ -77,6 +81,7 @@ wger raw API
 你继续负责：
 
 - API contract 稳定
+- disease/risk 到 exercise routine 的映射是否合理
 - exercise 数据正确
 - Neon seed 和 fallback
 - 测试
@@ -92,6 +97,27 @@ wger raw API
 ```
 
 所以 demo 不会因为 Neon 没准备好而坏掉。
+
+现在 disease/risk 选择的职责分工是：
+
+```text
+Stay Fit 页面按钮
+  -> /api/stayfit/routine/?risk=<risk_key>
+  -> core/stayfit_api.py 选择四个动作
+  -> 前端渲染 routine
+```
+
+`risk_key` 当前支持：
+
+```text
+heart_disease
+stroke
+type_2_diabetes
+respiratory_disease
+cancer
+```
+
+这个选择不保存用户数据，只影响当前页面展示。
 
 ## Neon 下一步
 
@@ -128,6 +154,8 @@ http://127.0.0.1:8000/api/stayfit/routine/
 ## 明天建议验收清单
 
 - 页面打开后四个动作能显示
+- Health focus 按钮能切换不同 disease/risk routine
+- 切换 focus 后 URL 只出现 `risk=` query，不写 session 或数据库
 - API 返回 JSON，且 exercises 长度为 4
 - 点击每个动作都能打开 modal
 - 有图片的动作显示图片，没图片的动作显示文字 fallback

@@ -136,13 +136,15 @@ def stayfit(request):
 @require_GET
 def api_stayfit_routine(request):
     level = request.GET.get("level", "beginner").strip().lower() or "beginner"
+    risk_key = request.GET.get("risk")
     if level not in {"beginner", "standard", "progress"}:
         level = "beginner"
-    return JsonResponse(build_stayfit_routine(level=level))
+    return JsonResponse(build_stayfit_routine(level=level, risk_key=risk_key))
 
 
 @require_GET
 def api_stayfit_reshuffle(request):
     current_id = request.GET.get("current")
     plan_tag = request.GET.get("plan", "cardio_core").strip().lower() or "cardio_core"
-    return JsonResponse({"exercise": get_replacement_exercise(current_id, plan_tag=plan_tag)})
+    risk_key = request.GET.get("risk")
+    return JsonResponse({"exercise": get_replacement_exercise(current_id, plan_tag=plan_tag, risk_key=risk_key)})

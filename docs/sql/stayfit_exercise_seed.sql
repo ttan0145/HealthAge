@@ -64,7 +64,7 @@ INSERT INTO exercise (
     'https://wger.de/api/v2/exerciseinfo/1962/',
     'Exercise name, category, muscles, equipment and image are sourced from wger.',
     'beginner',
-    '["cardio_core", "mobility"]'::jsonb,
+    '["cardio_core", "mobility", "heart_disease", "stroke", "type_2_diabetes", "respiratory_disease"]'::jsonb,
     1,
     true
 ),
@@ -85,7 +85,7 @@ INSERT INTO exercise (
     'https://wger.de/api/v2/exerciseinfo/1551/',
     'Adapted as a low-impact variation of the wger Push-Up entry for the MVP routine.',
     'beginner',
-    '["cardio_core", "strength"]'::jsonb,
+    '["cardio_core", "strength", "heart_disease", "type_2_diabetes"]'::jsonb,
     2,
     true
 ),
@@ -106,7 +106,7 @@ INSERT INTO exercise (
     'https://wger.de/api/v2/exerciseinfo/1572/',
     'Exercise name, category, equipment, image and base instructions are sourced from wger.',
     'beginner',
-    '["cardio_core", "strength"]'::jsonb,
+    '["cardio_core", "strength", "heart_disease", "stroke", "type_2_diabetes", "respiratory_disease", "cancer"]'::jsonb,
     3,
     true
 ),
@@ -127,7 +127,7 @@ INSERT INTO exercise (
     'https://wger.de/api/v2/exerciseinfo/580/',
     'Adapted from the wger Side Plank entry with a beginner knee-supported variation.',
     'beginner',
-    '["cardio_core", "strength"]'::jsonb,
+    '["cardio_core", "strength", "heart_disease", "stroke", "cancer"]'::jsonb,
     4,
     true
 ),
@@ -148,7 +148,7 @@ INSERT INTO exercise (
     'https://wger.de/api/v2/exerciseinfo/1591/',
     'Exercise name and base concept are sourced from wger.',
     'beginner',
-    '["mobility", "cardio_core"]'::jsonb,
+    '["mobility", "cardio_core", "heart_disease", "respiratory_disease", "cancer"]'::jsonb,
     5,
     true
 ),
@@ -169,7 +169,7 @@ INSERT INTO exercise (
     'https://wger.de/api/v2/exerciseinfo/1451/',
     'Exercise name and base instructions are sourced from wger.',
     'beginner',
-    '["mobility", "cardio_core"]'::jsonb,
+    '["mobility", "cardio_core", "stroke", "type_2_diabetes", "respiratory_disease", "cancer"]'::jsonb,
     6,
     true
 )

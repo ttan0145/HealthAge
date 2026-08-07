@@ -1,6 +1,7 @@
 const stayfitState = {
   routine: null,
   exercises: [],
+  selectedRisk: "heart_disease",
   remainingSeconds: 360,
   totalSeconds: 360,
   timerId: null,
@@ -10,14 +11,23 @@ const stayfitState = {
 document.addEventListener("DOMContentLoaded", () => {
   bindTimerControls();
   bindModalControls();
-  loadRoutine();
+  const params = new URLSearchParams(window.location.search);
+  loadRoutine(params.get("risk") || stayfitState.selectedRisk);
 });
 
-async function loadRoutine() {
+async function loadRoutine(riskKey = stayfitState.selectedRisk) {
   const list = document.getElementById("exercise-list");
+  const params = new URLSearchParams({ level: "beginner" });
+  if (riskKey) {
+    params.set("risk", riskKey);
+  }
+
+  stayfitState.selectedRisk = riskKey || "heart_disease";
+  list.classList.add("routine-list--loading");
+  list.innerHTML = "<p>Loading exercises...</p>";
 
   try {
-    const response = await fetch("/api/stayfit/routine/?level=beginner", {
+    const response = await fetch(`/api/stayfit/routine/?${params.toString()}`, {
       headers: { Accept: "application/json" },
     });
 
@@ -41,6 +51,7 @@ async function loadRoutine() {
 function applyRoutine(routine) {
   stayfitState.routine = routine;
   stayfitState.exercises = routine.exercises || [];
+  stayfitState.selectedRisk = routine.selected_risk?.key || stayfitState.selectedRisk;
 
   document.getElementById("routine-title").textContent = routine.title;
   document.getElementById("routine-subtitle").textContent = routine.subtitle;
@@ -52,7 +63,36 @@ function applyRoutine(routine) {
 
   const seconds = Math.max(60, Number(routine.duration_minutes || 6) * 60);
   setTimerDuration(seconds);
+  renderRiskOptions(routine.risk_options || [], stayfitState.selectedRisk);
   renderExercises();
+  syncRiskUrl(stayfitState.selectedRisk);
+}
+
+function renderRiskOptions(options, selectedKey) {
+  const container = document.getElementById("risk-options");
+  if (!container) return;
+
+  container.innerHTML = "";
+  options.forEach((option) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `risk-option${option.key === selectedKey ? " risk-option--active" : ""}`;
+    button.setAttribute("aria-pressed", option.key === selectedKey ? "true" : "false");
+    button.addEventListener("click", () => {
+      if (option.key !== stayfitState.selectedRisk) {
+        loadRoutine(option.key);
+      }
+    });
+
+    const label = document.createElement("strong");
+    label.textContent = option.label;
+
+    const description = document.createElement("span");
+    description.textContent = option.description;
+
+    button.append(label, description);
+    container.append(button);
+  });
 }
 
 function renderExercises() {
@@ -104,7 +144,12 @@ async function reshuffleExercise(index, button) {
   button.textContent = "Loading";
 
   try {
-    const response = await fetch(`/api/stayfit/reshuffle/?current=${encodeURIComponent(current.id)}&plan=cardio_core`, {
+    const params = new URLSearchParams({
+      current: current.id,
+      plan: stayfitState.routine?.plan_tag || "cardio_core",
+      risk: stayfitState.selectedRisk,
+    });
+    const response = await fetch(`/api/stayfit/reshuffle/?${params.toString()}`, {
       headers: { Accept: "application/json" },
     });
 
@@ -290,4 +335,11 @@ function pad(value) {
 function titleCase(value) {
   if (!value) return "";
   return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function syncRiskUrl(riskKey) {
+  if (!window.history?.replaceState || !riskKey) return;
+  const url = new URL(window.location.href);
+  url.searchParams.set("risk", riskKey);
+  window.history.replaceState({}, "", `${url.pathname}?${url.searchParams.toString()}`);
 }

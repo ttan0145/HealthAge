@@ -4,6 +4,7 @@
 
 ```text
 GET /api/stayfit/routine/
+GET /api/stayfit/routine/?risk=heart_disease
 GET /api/stayfit/reshuffle/?current=step_jack
 ```
 
@@ -15,17 +16,30 @@ GET /api/stayfit/reshuffle/?current=step_jack
 wger 原始动作资料
   -> 我们挑选和清洗
   -> Neon exercise 表，或本地 fallback pool
-  -> HealthAge API 返回固定 JSON
+  -> 用户在 Stay Fit 页面选择疾病/风险 focus
+  -> HealthAge API 按 risk 参数返回固定 JSON
   -> Stay Fit 页面渲染列表、Timer、Tips、弹窗
 ```
 
 ## routine API 返回什么
 
-`GET /api/stayfit/routine/` 返回一个完整训练计划：
+`GET /api/stayfit/routine/?risk=heart_disease` 返回一个完整训练计划。
+
+当前支持的 `risk` 参数：
+
+```text
+heart_disease
+stroke
+type_2_diabetes
+respiratory_disease
+cancer
+```
+
+如果不传 `risk`，默认使用 `heart_disease`。这个选择不会保存到数据库，也不会保存到 Django session，只是当前请求参数。
 
 ```json
 {
-  "plan_id": "mr_lim_cardio_core_beginner",
+  "plan_id": "mr_lim_heart_disease_beginner",
   "persona": {
     "name": "Mr Lim Wei Jian",
     "age": 48,
@@ -38,8 +52,21 @@ wger 原始动作资料
       "no recent screening"
     ]
   },
-  "title": "Today's routine: cardio and core",
-  "subtitle": "A short low-impact routine to build activity gradually.",
+  "risk_options": [
+    {
+      "key": "heart_disease",
+      "label": "Heart disease",
+      "description": "Low-impact cardio plus light strength."
+    }
+  ],
+  "selected_risk": {
+    "key": "heart_disease",
+    "label": "Heart disease",
+    "description": "Low-impact cardio plus light strength."
+  },
+  "plan_tag": "heart_disease",
+  "title": "Heart disease: low-impact cardio and core",
+  "subtitle": "A short routine to build activity gradually without high impact.",
   "level": "beginner",
   "duration_minutes": 6,
   "exercises": [
@@ -74,6 +101,9 @@ wger 原始动作资料
 | --- | --- | --- |
 | `plan_id` | 这个训练计划的 ID | 我们自己定义 |
 | `persona` | Mr. Lim 的人物画像信息 | 我们自己定义 |
+| `risk_options` | Stay Fit 页面上可选的疾病/风险按钮 | 我们自己定义 |
+| `selected_risk` | 当前选中的疾病/风险 | 来自前端 query 参数，后端校验 |
+| `plan_tag` | 当前 routine 的内部标签，换动作时会用到 | 我们自己定义 |
 | `title` | 页面标题 | 我们自己定义 |
 | `subtitle` | 页面副标题 | 我们自己定义 |
 | `level` | 难度等级，例如 beginner | 我们自己定义 |
@@ -96,9 +126,9 @@ wger 原始动作资料
 
 ## Tips 区域从哪里来
 
-Tips 不应该直接调用 wger。
+Tips 不应该直接调用 wger，也不应该从数据库里硬抓。
 
-wger 负责的是动作资料，比如动作名称、图片、视频、说明。右侧 Tips 是 HealthAge 自己的安全和行为提醒，应该来自：
+wger 负责的是动作资料，比如动作名称、图片、视频、说明。右侧 Tips 是 HealthAge 自己的安全和行为提醒，会根据当前 `risk` 选择不同文案，应该来自：
 
 ```text
 用户故事 3.8.3 Guidance Panel
@@ -155,6 +185,8 @@ Mr. Lim 应该做哪四个动作
   -> 自动使用 core/stayfit_api.py 里的本地 fallback 数据
 ```
 
+注意：Neon 只存 exercise 动作资料。`heart_disease`、`stroke` 这些 disease/risk 到 routine 的映射现在写在 `core/stayfit_api.py`，不保存用户选择。
+
 所以明天前端同学可以放心继续做页面；即使 Neon 还没 seed，页面也能正常 demo。
 
 Neon 建表和 seed 文件在：
@@ -165,7 +197,7 @@ docs/sql/stayfit_exercise_seed.sql
 
 ## reshuffle API 返回什么
 
-`GET /api/stayfit/reshuffle/?current=step_jack` 返回一个替换动作：
+`GET /api/stayfit/reshuffle/?current=step_jack&risk=heart_disease` 返回一个替换动作：
 
 ```json
 {

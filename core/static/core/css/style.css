@@ -1143,6 +1143,76 @@ body {
   width: min(1520px, calc(100% - 48px));
 }
 
+.risk-picker {
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  margin-top: 28px;
+  padding: 20px 0 24px;
+  border-top: 1px solid var(--gray-border);
+  border-bottom: 1px solid var(--gray-border);
+}
+
+.risk-picker h2,
+.risk-picker p {
+  margin: 0;
+}
+
+.risk-picker h2 {
+  font-size: 22px;
+}
+
+.risk-picker p {
+  margin-top: 6px;
+  color: var(--gray-muted);
+  line-height: 1.45;
+}
+
+.risk-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.risk-option {
+  flex: 1 1 180px;
+  min-height: 76px;
+  display: grid;
+  gap: 5px;
+  align-content: center;
+  padding: 12px 14px;
+  border: 1px solid var(--gray-border);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+}
+
+.risk-option:hover {
+  border-color: rgba(31, 107, 72, 0.44);
+  transform: translateY(-1px);
+}
+
+.risk-option--active {
+  border-color: var(--green-strong);
+  background: var(--green-bg);
+}
+
+.risk-option strong {
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.risk-option span {
+  color: var(--gray-muted);
+  font-size: 13px;
+  line-height: 1.25;
+}
+
 .stayfit-layout {
   display: grid;
   grid-template-columns: minmax(320px, 1fr) minmax(320px, 430px) minmax(280px, 360px);
@@ -1584,6 +1654,14 @@ body {
 
   .guidance-panel {
     grid-column: auto;
+  }
+
+  .risk-picker {
+    grid-template-columns: 1fr;
+  }
+
+  .risk-option {
+    flex-basis: 150px;
   }
 
   .timer-actions {

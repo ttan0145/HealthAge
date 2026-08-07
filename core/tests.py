@@ -174,6 +174,7 @@ class HealthAgeFlowTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'id="exercise-list"')
+        self.assertContains(response, 'id="risk-options"')
         self.assertContains(response, "/static/core/js/stayfit.js")
 
     def test_stayfit_routine_api_returns_mr_lim_contract(self):
@@ -182,16 +183,31 @@ class HealthAgeFlowTests(TestCase):
         self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertEqual(data["persona"]["name"], "Mr Lim Wei Jian")
-        self.assertEqual(data["title"], "Today's routine: cardio and core")
+        self.assertEqual(data["selected_risk"]["key"], "heart_disease")
+        self.assertEqual(data["title"], "Heart disease: low-impact cardio and core")
         self.assertEqual(len(data["exercises"]), 4)
         self.assertEqual(data["exercises"][0]["id"], "step_jack")
+        self.assertEqual(len(data["risk_options"]), 5)
         self.assertIn("guidance_tip", data)
         self.assertIn("wger", data["source"]["usage"])
 
+    def test_stayfit_routine_api_returns_selected_risk_routine(self):
+        response = self.client.get(reverse("api_stayfit_routine"), {"risk": "respiratory_disease"})
+
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["selected_risk"]["label"], "Respiratory disease")
+        self.assertEqual(data["plan_tag"], "respiratory_disease")
+        self.assertEqual(data["exercises"][0]["id"], "deep_breathing")
+        self.assertEqual(data["exercises"][1]["id"], "torso_rotation")
+
     def test_stayfit_reshuffle_api_replaces_current_exercise(self):
-        response = self.client.get(reverse("api_stayfit_reshuffle"), {"current": "step_jack"})
+        response = self.client.get(
+            reverse("api_stayfit_reshuffle"),
+            {"current": "deep_breathing", "risk": "respiratory_disease"},
+        )
 
         self.assertEqual(response.status_code, 200)
         exercise = response.json()["exercise"]
-        self.assertNotEqual(exercise["id"], "step_jack")
+        self.assertNotEqual(exercise["id"], "deep_breathing")
         self.assertIn("instructions", exercise)
