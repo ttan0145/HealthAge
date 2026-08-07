@@ -1140,13 +1140,13 @@ body {
 }
 
 .stayfit-main {
-  width: min(1520px, calc(100% - 48px));
+  width: min(1180px, calc(100% - 48px));
 }
 
 .stayfit-layout {
   display: grid;
-  grid-template-columns: minmax(320px, 1fr) minmax(320px, 430px) minmax(280px, 360px);
-  gap: 40px;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 330px) minmax(220px, 280px);
+  gap: 24px;
   align-items: stretch;
   margin-top: 34px;
 }
@@ -1195,8 +1195,7 @@ body {
 
 .exercise-row {
   min-height: 104px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 78px;
+  display: flex;
   gap: 12px;
   align-items: stretch;
   background: var(--white);
@@ -1204,6 +1203,12 @@ body {
   border-radius: 8px;
   padding: 0;
   overflow: hidden;
+  cursor: pointer;
+}
+
+.exercise-row .sf-step-marker,
+.exercise-row .sf-step-body {
+  align-self: center;
 }
 
 .exercise-row + .exercise-row {
@@ -1217,12 +1222,16 @@ body {
 }
 
 .exercise-main {
-  width: 100%;
-  display: grid;
-  grid-template-columns: 42px minmax(0, 1fr);
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
   gap: 14px;
   align-items: center;
+  justify-content: flex-start;
   border: 0;
+  border-radius: 0;
   background: transparent;
   padding: 20px 18px;
   color: inherit;
@@ -1261,6 +1270,11 @@ body {
 }
 
 .exercise-swap {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 78px;
+  min-width: 0;
+  margin-left: auto;
   border: 0;
   border-left: 1px solid var(--gray-border);
   background: #f8faf8;
@@ -1283,7 +1297,7 @@ body {
   justify-items: center;
   align-content: start;
   gap: 18px;
-  padding: 34px;
+  padding: 28px;
   border: 1px solid var(--gray-border);
   border-radius: var(--radius-lg);
   background: var(--white);
@@ -1298,8 +1312,9 @@ body {
 }
 
 .timer-ring {
-  width: 228px;
-  height: 228px;
+  width: min(228px, 100%);
+  aspect-ratio: 1;
+  height: auto;
   display: grid;
   place-content: center;
   border-radius: 50%;
@@ -1363,6 +1378,8 @@ body {
 }
 
 .timer-mini-btn {
+  appearance: none;
+  -webkit-appearance: none;
   border-color: rgba(31, 107, 72, 0.55);
   color: var(--green-text);
   cursor: pointer;
@@ -1414,7 +1431,7 @@ body {
 }
 
 .guidance-figure img {
-  width: min(210px, 80%);
+  width: min(190px, 80%);
   height: auto;
 }
 

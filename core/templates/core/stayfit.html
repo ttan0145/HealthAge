@@ -4,18 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stay Fit</title>
-<link rel="stylesheet" href="/static/core/css/style.css">
+<link rel="stylesheet" href="/static/core/css/style.css?v=stayfit-api-layout">
 </head>
 <body class="lp-body">
   <div data-include="nav"></div>
 
-  <main class="source-main stayfit-main">
-    <p class="eyebrow">Stay Fit</p>
-    <h1 class="reading-title" id="routine-title">Today's routine</h1>
-    <p class="reading-lead" id="routine-subtitle">Loading your routine...</p>
+  <main class="sf-main source-main stayfit-main">
+    <header class="sf-header">
+      <p class="eyebrow">Stay Fit</p>
+      <h1 class="sf-title reading-title" id="routine-title">Today's routine</h1>
+      <p class="sf-subtitle reading-lead" id="routine-subtitle">Loading your routine...</p>
+    </header>
 
-    <section class="stayfit-layout" aria-label="Stay Fit routine workspace">
-      <section class="stayfit-column stayfit-column--list" aria-labelledby="exercise-list-title">
+    <section class="sf-grid stayfit-layout" aria-label="Stay Fit routine workspace">
+      <section class="sf-card sf-steps stayfit-column stayfit-column--list" aria-labelledby="exercise-list-title">
         <div class="stayfit-section-heading">
           <h2 id="exercise-list-title">Exercise order</h2>
           <span id="routine-level" class="mode-pill">Beginner</span>
@@ -25,35 +27,37 @@
         </div>
       </section>
 
-      <section class="timer-panel" aria-labelledby="timer-title">
-        <p class="timer-kicker" id="timer-title">Let's get moving</p>
-        <div class="timer-ring" aria-live="polite">
-          <span id="timer-display">06:00</span>
-          <small>Total time</small>
+      <section class="sf-card sf-timer-card timer-panel" aria-labelledby="timer-title">
+        <p class="sf-timer-label timer-kicker" id="timer-title">Let's get moving</p>
+        <div class="sf-ring-wrap timer-ring" aria-live="polite">
+          <div class="sf-ring-center">
+            <span class="sf-time" id="timer-display">06:00</span>
+            <small class="sf-time-caption">Total time</small>
+          </div>
         </div>
-        <div class="timer-controls">
-          <button type="button" class="timer-mini-btn" id="timer-add-minute">+1 min</button>
-          <label>
-            <input id="timer-minutes" type="number" min="1" max="60" value="6">
-            <span>min</span>
+        <div class="sf-controls timer-controls">
+          <button type="button" class="sf-pill-btn timer-mini-btn" id="timer-add-minute">+1 min</button>
+          <label class="sf-num-field">
+            <input class="sf-num-input" id="timer-minutes" type="number" min="1" max="60" value="6">
+            <span class="sf-num-unit">min</span>
           </label>
-          <label>
-            <input id="timer-seconds" type="number" min="0" max="59" value="0">
-            <span>sec</span>
+          <label class="sf-num-field">
+            <input class="sf-num-input" id="timer-seconds" type="number" min="0" max="59" value="0">
+            <span class="sf-num-unit">sec</span>
           </label>
         </div>
         <div class="timer-actions">
-          <button type="button" class="btn-primary" id="timer-toggle">Start</button>
+          <button type="button" class="sf-start-btn btn-primary" id="timer-toggle">Start</button>
           <button type="button" class="btn-secondary" id="timer-reset">Reset</button>
         </div>
         <p id="timer-status" class="timer-status">Ready when you are.</p>
       </section>
 
-      <aside class="guidance-panel" aria-labelledby="guidance-title">
-        <div class="guidance-figure" aria-hidden="true">
+      <aside class="sf-card sf-side-card guidance-panel" aria-labelledby="guidance-title">
+        <div class="sf-mascot guidance-figure" aria-hidden="true">
           <img src="/static/img/grandpa.png" alt="">
         </div>
-        <div class="guidance-tip">
+        <div class="sf-tip guidance-tip">
           <span class="guidance-icon" aria-hidden="true">i</span>
           <div>
             <h2 id="guidance-title">Tip</h2>
@@ -83,6 +87,6 @@
 
   <div data-include="footer"></div>
   <script src="/static/core/js/include.js"></script>
-  <script src="/static/core/js/stayfit.js"></script>
+  <script src="/static/core/js/stayfit.js?v=stayfit-api-layout"></script>
 </body>
 </html>

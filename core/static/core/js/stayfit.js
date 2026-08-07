@@ -62,36 +62,48 @@ function renderExercises() {
 
   stayfitState.exercises.forEach((exercise, index) => {
     const row = document.createElement("article");
-    row.className = "exercise-row exercise-row--interactive";
+    row.className = "sf-step exercise-row exercise-row--interactive";
+    row.role = "button";
+    row.tabIndex = 0;
+    row.addEventListener("click", () => openExerciseModal(exercise));
+    row.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openExerciseModal(exercise);
+      }
+    });
 
-    const detailButton = document.createElement("button");
-    detailButton.type = "button";
-    detailButton.className = "exercise-main";
-    detailButton.addEventListener("click", () => openExerciseModal(exercise));
+    const marker = document.createElement("span");
+    marker.className = "sf-step-marker";
 
     const badge = document.createElement("span");
-    badge.className = "exercise-index";
+    badge.className = "sf-step-num exercise-index";
     badge.textContent = String(index + 1);
+    marker.append(badge);
 
     const body = document.createElement("span");
-    body.className = "exercise-copy";
+    body.className = "sf-step-body exercise-copy";
 
     const name = document.createElement("strong");
+    name.className = "sf-step-title";
     name.textContent = exercise.name;
 
     const detail = document.createElement("em");
+    detail.className = "sf-step-meta";
     detail.textContent = formatExerciseDose(exercise);
 
     body.append(name, detail);
-    detailButton.append(badge, body);
 
     const swapButton = document.createElement("button");
     swapButton.type = "button";
-    swapButton.className = "exercise-swap";
+    swapButton.className = "sf-pill-btn exercise-swap";
     swapButton.textContent = "Swap";
-    swapButton.addEventListener("click", () => reshuffleExercise(index, swapButton));
+    swapButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      reshuffleExercise(index, swapButton);
+    });
 
-    row.append(detailButton, swapButton);
+    row.append(marker, body, swapButton);
     list.append(row);
   });
 }
