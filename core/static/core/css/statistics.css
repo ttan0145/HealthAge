@@ -1,0 +1,519 @@
+/* ---------------------------------------------------------------- */
+/* Read more: single risk detail page (/readmore/?risk=<slug>)       */
+/* ---------------------------------------------------------------- */
+
+.rm-main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 28px 90px;
+}
+
+.rm-header { margin: 18px 0 32px; }
+
+.rm-title {
+  margin: 0 0 14px;
+  font-size: 52px;
+  line-height: 1.05;
+  font-weight: 800;
+  color: var(--badge-high-text);
+}
+
+.rm-lead {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--ink);
+  max-width: 54ch;
+}
+
+/* Scale strip */
+.rm-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 44px;
+}
+
+.rm-stat {
+  background: var(--red-light);
+  border-radius: var(--radius-md);
+  padding: 24px 22px;
+}
+
+.rm-stat-value {
+  margin: 0 0 6px;
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--badge-high-text);
+  line-height: 1.1;
+}
+
+.rm-stat-label {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+.rm-section { margin-bottom: 48px; }
+
+.rm-section-intro {
+  margin: -6px 0 20px;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 60ch;
+}
+
+.rm-body {
+  margin: 0 0 16px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink);
+  max-width: 62ch;
+}
+
+/* Why this came up for you */
+.rm-drivers {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rm-driver {
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: var(--radius-md);
+  padding: 20px 24px;
+}
+
+.rm-driver-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.rm-driver-factor {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.rm-driver-detail {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 62ch;
+}
+
+/* Warning signs */
+.rm-signs {
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: var(--radius-md);
+  padding: 24px 28px;
+  margin-top: 22px;
+}
+
+.rm-signs-title {
+  margin: 0 0 14px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.rm-signs-list {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.rm-signs-list li {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.rm-emergency {
+  margin: 18px 0 0;
+  background: var(--badge-high-bg);
+  color: var(--badge-high-text);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  font-size: 15.5px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* Can change / cannot change */
+.rm-change-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.rm-change-col {
+  border-radius: var(--radius-md);
+  padding: 24px 26px;
+}
+
+.rm-change-col--can { background: var(--green-bg); }
+.rm-change-col--cannot {
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+}
+
+.rm-change-title {
+  margin: 0 0 14px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.rm-change-col--can .rm-change-title { color: var(--green-text); }
+.rm-change-col--cannot .rm-change-title { color: var(--gray-muted); }
+
+.rm-change-list {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.rm-change-list li {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.rm-change-col--cannot .rm-change-list li { color: var(--ink-soft); }
+
+.rm-change-note {
+  margin: 20px 0 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 62ch;
+}
+
+/* Next step */
+.rm-next {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  text-align: left;
+  text-decoration: none;
+  background: var(--green-bg);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 24px 26px;
+}
+
+.rm-next:hover { filter: brightness(0.98); }
+.rm-next .action-title {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--green-text);
+}
+.rm-next .action-subtitle {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.rm-next .action-icon svg { width: 26px; height: 26px; color: var(--green-strong); }
+.rm-next .action-body { flex: 1; }
+.rm-next .action-chevron svg { color: var(--green-strong); }
+
+.rm-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.rm-link-pill {
+  display: inline-block;
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--green-text);
+  text-decoration: none;
+}
+
+.rm-link-pill:hover { background: var(--green-bg); }
+
+/* Other risks switcher */
+.rm-others {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.rm-other {
+  display: block;
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: var(--radius-md);
+  padding: 22px 24px;
+  text-decoration: none;
+}
+
+.rm-other:hover { border-color: var(--green-strong); }
+
+.rm-other-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.rm-other .risk-card-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.rm-other-desc {
+  display: block;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+/* Disclaimer */
+.rm-disclaimer {
+  margin: 28px 0 0;
+  padding: 18px 22px;
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: var(--radius-md);
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--gray-muted);
+  max-width: 68ch;
+}
+
+@media (max-width: 760px) {
+  .rm-main { padding: 24px 20px 60px; }
+  .rm-title { font-size: 38px; }
+  .rm-lead { font-size: 18px; }
+  .rm-stats { grid-template-columns: 1fr; }
+  .rm-change-grid { grid-template-columns: 1fr; }
+  .rm-others { grid-template-columns: 1fr; }
+  .rm-driver-top { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
+
+
+/* ---------------------------------------------------------------- */
+/* Work 1: cause of death statistics                                 */
+/* Shared by the read more page and the dashboard popup.             */
+/* ---------------------------------------------------------------- */
+
+.stat-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "top go"
+    "bar go";
+  gap: 6px 14px;
+  align-items: center;
+}
+
+.stat-row-top {
+  grid-area: top;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* Rows that lead to a detail page. The whole row is the target, not just
+   the name, so the bar and the percentage are clickable too. */
+.stat-row--link {
+  text-decoration: none;
+  color: inherit;
+  padding: 10px 12px;
+  margin: -10px -12px;
+  border-radius: var(--radius-sm, 10px);
+  transition: background 0.12s ease;
+}
+
+.stat-row--link:hover,
+.stat-row--link:focus-visible {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.stat-row--link:hover .stat-row-name { text-decoration: underline; }
+
+.stat-row-go {
+  grid-area: go;
+  display: flex;
+  align-items: center;
+  color: var(--gray-muted);
+}
+
+.stat-row-go svg { width: 18px; height: 18px; display: block; }
+.stat-row--link:hover .stat-row-go { color: var(--green-strong); }
+
+.stat-row-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.stat-row-share {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-row-bar {
+  grid-area: bar;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--gray-border);
+  overflow: hidden;
+}
+
+.stat-row-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--gray-muted);
+}
+
+.stat-row--High .stat-row-fill { background: var(--badge-high-text); }
+.stat-row--High .stat-row-name,
+.stat-row--High .stat-row-share { color: var(--badge-high-text); }
+.stat-row--Moderate .stat-row-fill { background: var(--badge-mod-text); }
+.stat-row--Baseline .stat-row-fill { background: var(--green-strong); }
+
+.stat-other {
+  margin: 18px 0 0;
+  font-size: 14.5px;
+  color: var(--gray-muted);
+}
+
+.stat-source {
+  margin: 10px 0 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--gray-muted);
+}
+
+/* Popup ----------------------------------------------------------- */
+
+.stat-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 28, 28, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 1000;
+}
+
+.stat-modal {
+  background: var(--page-bg);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 620px;
+  max-height: 86vh;
+  overflow-y: auto;
+  padding: 34px 38px 32px;
+  position: relative;
+}
+
+.stat-modal-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--ink-soft);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.stat-modal-close:hover { background: var(--gray-border); }
+
+.stat-modal-eyebrow {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--green-text);
+}
+
+.stat-modal-title {
+  margin: 0 0 12px;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--ink);
+  padding-right: 44px;
+}
+
+.stat-modal-headline {
+  margin: 0 0 26px;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.stat-modal-foot {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--gray-border);
+}
+
+.stat-modal-loading {
+  padding: 20px 0;
+  font-size: 16px;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 600px) {
+  .stat-modal { padding: 28px 22px 24px; }
+  .stat-modal-title { font-size: 22px; }
+}
+
+/* The row for the cause you are already reading about. */
+.stat-row--current {
+  background: rgba(0, 0, 0, 0.04);
+  outline: 1px solid var(--gray-border);
+}
+
+/* Shown instead of the three tiles when a cause is not in the user's
+   published top ten. */
+.rm-stat--absent {
+  grid-column: 1 / -1;
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+}
+.rm-stat--absent .rm-stat-value { font-size: 22px; color: var(--ink-soft); }

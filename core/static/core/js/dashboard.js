@@ -3,8 +3,11 @@
 // a fetch("/api/home") call — here it's just a local object so
 // the page works with no backend at all.
 
+// "slug" links a risk to its detail page at /readmore/?risk=<slug>.
+// The slugs must match the keys in core/risk_content.py.
 const SAMPLE_DATA = {
   top_risk: {
+    slug: "heart-disease",
     cause: "Heart disease",
     description: "The leading cause of death for men aged 41 to 59 in Malaysia.",
     note: "Selangor figures are not published for this year, so this uses the national figure for men aged 41 to 59.",
@@ -16,16 +19,19 @@ const SAMPLE_DATA = {
   },
   other_risks: [
     {
+      slug: "heart-disease",
       name: "Heart disease",
       level: "High",
       description: "Leading cause of death for men in your age band. Rarely exercising and high work stress raise this further.",
     },
     {
+      slug: "stroke",
       name: "Stroke",
       level: "Moderate",
       description: "A sudden loss of blood flow to the brain. High work stress is a contributing factor for you.",
     },
     {
+      slug: "type-2-diabetes",
       name: "Type 2 diabetes",
       level: "Baseline",
       description: "Your eating pattern keeps this within the national baseline for your profile.",
@@ -49,10 +55,10 @@ function renderTopRiskCard(topRisk) {
       <h2 class="risk-title">${topRisk.cause}</h2>
       <p class="risk-desc">${topRisk.description}</p>
       ${noteHtml}
-      <button class="btn-readmore" type="button">
+      <a class="btn-readmore" href="/readmore/?risk=${topRisk.slug}">
         Read more
         <span class="icon">${ICON_CHEVRON}</span>
-      </button>
+      </a>
     </section>
   `;
 }
@@ -79,7 +85,7 @@ function renderOtherRisks(risks) {
   const cards = risks
     .map(
       (risk) => `
-      <div class="risk-card">
+      <a class="risk-card" href="/readmore/?risk=${risk.slug}">
         <div class="risk-card-top">
           <span class="risk-card-name">${risk.name}</span>
           <span class="risk-card-right">
@@ -88,7 +94,7 @@ function renderOtherRisks(risks) {
           </span>
         </div>
         <p class="risk-card-desc">${risk.description}</p>
-      </div>
+      </a>
     `
     )
     .join("");

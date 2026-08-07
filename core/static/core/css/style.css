@@ -1286,3 +1286,10 @@ body {
   .ds-main { padding: 32px 20px 60px; }
   .ds-grid { grid-template-columns: 1fr; }
 }
+
+/* The dashboard's "Read more" control and the other-risk cards became links
+   so they can open /readmore/?risk=<slug>. Everything else for that page
+   lives in its own file, statistics.css, to keep this stylesheet untouched. */
+.btn-readmore,
+.risk-card { text-decoration: none; }
+.risk-card:hover { border-color: var(--green-strong); }

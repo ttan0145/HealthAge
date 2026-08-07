@@ -3,5 +3,208 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Read More</title>
+<title>{{ risk.name }} &mdash; Health Age</title>
 <link rel="stylesheet" href="/static/core/css/style.css">
+<link rel="stylesheet" href="/static/core/css/statistics.css">
+</head>
+<body class="lp-body">
+
+  <div data-include="nav"></div>
+
+  <main class="rm-main">
+
+    <a href="/dashboard/" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to my plan
+    </a>
+
+    <!-- Header --------------------------------------------------- -->
+    <header class="rm-header">
+      <p class="eyebrow">{% if is_top_risk %}Your top risk{% else %}Risk we checked{% endif %}</p>
+      <h1 class="rm-title">{{ risk.name }}</h1>
+      <p class="rm-lead">{{ risk.lead }}</p>
+    </header>
+
+    <!-- Scale of it, for this user's group ----------------------- -->
+    <section class="rm-stats">
+      {% if here %}
+      <div class="rm-stat">
+        <p class="rm-stat-value">{{ here.share_display }}%</p>
+        <p class="rm-stat-label">of deaths among {{ stats.group_label }}</p>
+      </div>
+      <div class="rm-stat">
+        <p class="rm-stat-value">{{ here_rank }}</p>
+        <p class="rm-stat-label">most common cause of death for this group</p>
+      </div>
+      <div class="rm-stat">
+        <p class="rm-stat-value">{{ here.death_count_display }}</p>
+        <p class="rm-stat-label">deaths recorded in {{ stats.year }}</p>
+      </div>
+      {% else %}
+      <div class="rm-stat rm-stat--absent">
+        <p class="rm-stat-value">Not in the top ten</p>
+        <p class="rm-stat-label">
+          The published top ten causes for {{ stats.group_label }} does not
+          include this one, so there is no figure for your group. Everything
+          below still applies.
+        </p>
+      </div>
+      {% endif %}
+    </section>
+
+    <!-- Work 1: cause of death statistics for this age and gender -->
+    <section class="rm-section">
+      <div class="section-heading"><h2>Causes of death, {{ stats.group_label }}</h2></div>
+      <p class="rm-section-intro">
+        {{ stats.headline }}
+      </p>
+
+      <div class="stat-rows">
+        {% for cause in stats.causes %}
+        <a class="stat-row stat-row--link stat-row--{{ cause.level }}{% if cause.slug == risk.slug %} stat-row--current{% endif %}"
+           href="/readmore/?risk={{ cause.slug }}">
+          <span class="stat-row-top">
+            <span class="stat-row-name">{{ cause.cause }}</span>
+            <span class="stat-row-share">{{ cause.share_display }}%</span>
+          </span>
+          <span class="stat-row-bar">
+            <span class="stat-row-fill" style="width: {% widthratio cause.share stats.causes.0.share 100 %}%"></span>
+          </span>
+          <span class="stat-row-go" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </span>
+        </a>
+        {% endfor %}
+      </div>
+
+      {% if stats.other_share %}
+      <p class="stat-other">All other causes make up the remaining {{ stats.other_share }}%.</p>
+      {% endif %}
+      {% if stats.available %}
+      <p class="stat-source">
+        Source: {{ stats.source }}. Figures cover {{ stats.group_label }} and
+        are national, not state level.
+      </p>
+      {% endif %}
+    </section>
+
+    <!-- What it is ----------------------------------------------- -->
+    <section class="rm-section">
+      <div class="section-heading"><h2>What {{ risk.name|lower }} actually is</h2></div>
+      {% for para in risk.what_it_is %}
+      <p class="rm-body">{{ para }}</p>
+      {% endfor %}
+
+      <div class="rm-signs">
+        <h3 class="rm-signs-title">What to watch for</h3>
+        <ul class="rm-signs-list">
+          {% for sign in risk.warning_signs %}
+          <li>{{ sign }}</li>
+          {% endfor %}
+        </ul>
+        {% if risk.emergency %}
+        <p class="rm-emergency">{{ risk.emergency }}</p>
+        {% endif %}
+      </div>
+    </section>
+
+    <!-- Changeable vs not ---------------------------------------- -->
+    <section class="rm-section">
+      <div class="section-heading"><h2>What you can change</h2></div>
+
+      <div class="rm-change-grid">
+        <div class="rm-change-col rm-change-col--can">
+          <h3 class="rm-change-title">Within your control</h3>
+          <ul class="rm-change-list">
+            {% for item in risk.can_change %}
+            <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="rm-change-col rm-change-col--cannot">
+          <h3 class="rm-change-title">Fixed</h3>
+          <ul class="rm-change-list">
+            {% for item in risk.cannot_change %}
+            <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <p class="rm-change-note">{{ risk.change_note }}</p>
+    </section>
+
+    <!-- Next step ------------------------------------------------ -->
+    <section class="rm-section">
+      <div class="section-heading"><h2>What to do about it</h2></div>
+      <a class="rm-next" href="/dashboard/">
+        <span class="action-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M6 3H4"/><path d="M14 3h2"/><path d="M10 13v3a5 5 0 0 0 10 0v-1"/><circle cx="20" cy="15" r="2"/></svg>
+        </span>
+        <span class="action-body">
+          <p class="action-title">{{ risk.next_step.title }}</p>
+          <p class="action-subtitle">{{ risk.next_step.detail }}</p>
+        </span>
+        <span class="icon action-chevron">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+      </a>
+
+      <div class="rm-links">
+        <a href="/stayfit/" class="rm-link-pill">Ways to get more active</a>
+        <a href="/lifestyle/" class="rm-link-pill">Update my answers</a>
+      </div>
+    </section>
+
+    <!-- Other risks ---------------------------------------------- -->
+    <section class="rm-section">
+      <div class="section-heading"><h2>Other risks we checked</h2></div>
+      <div class="rm-others">
+        {% for other in other_causes %}
+        <a class="rm-other" href="/readmore/?risk={{ other.slug }}">
+          <span class="rm-other-top">
+            <span class="risk-card-name">{{ other.cause }}</span>
+            <span class="badge badge--{{ other.level }}">{{ other.share_display }}%</span>
+          </span>
+          <span class="rm-other-desc">
+            {{ other.rank_display }} of ten for {{ stats.group_label }},
+            {{ other.death_count_display }} deaths in {{ stats.year }}.
+          </span>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- Where this came from ------------------------------------- -->
+    <section class="rm-section">
+      <div class="section-heading"><h2>Where this comes from</h2></div>
+      <p class="rm-body">
+        The figures on this page come from {{ stats.source }}, published by the
+        Department of Statistics Malaysia. They are the ten leading causes of
+        death for {{ stats.group_label }}, matched to the age band and sex you
+        gave us.
+      </p>
+      <p class="rm-body">
+        Two limits worth knowing. The workbook publishes causes by age band and
+        sex at national level only, so your state does not change the result.
+        And it counts medically certified deaths, which is the more reliable
+        record but not every death in the country.
+      </p>
+      <a href="/source/" class="rm-link-pill">See all data sources</a>
+
+      <p class="rm-disclaimer">
+        This page describes patterns in population statistics for people who
+        share your age and sex. It is not a diagnosis and it cannot tell you
+        whether you personally have this condition. Only a doctor can do that.
+        If you have symptoms, see one rather than waiting for a screening
+        appointment.
+      </p>
+    </section>
+
+  </main>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/core/js/include.js"></script>
+</body>
+</html>

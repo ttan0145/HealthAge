@@ -12,4 +12,8 @@ urlpatterns = [
     path('readmore/', views.readmore, name='readmore'),
     path('source/', views.source, name='source'),
     path('stayfit/', views.stayfit, name='stayfit'),
+
+    # Work 1: cause of death statistics by age and gender.
+    path('api/cause-of-death/', views.cause_of_death_stats,
+         name='cause_of_death_stats'),
 ]
