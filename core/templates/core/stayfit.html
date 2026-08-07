@@ -9,28 +9,80 @@
 <body class="lp-body">
   <div data-include="nav"></div>
 
-  <main class="source-main">
+  <main class="source-main stayfit-main">
     <p class="eyebrow">Stay Fit</p>
-    <h1 class="reading-title">A simple starter routine</h1>
-    <p class="reading-lead">This routine is not medical advice. It is a light activity prompt for generally healthy adults. Stop if you feel pain, dizziness or chest discomfort.</p>
+    <h1 class="reading-title" id="routine-title">Today's routine</h1>
+    <p class="reading-lead" id="routine-subtitle">Loading your routine...</p>
 
-    <section class="routine-layout">
-      <div class="routine-list">
-        <div class="exercise-row"><span>1</span><strong>Brisk walk</strong><em>10 minutes</em></div>
-        <div class="exercise-row"><span>2</span><strong>Chair squats</strong><em>2 sets of 8</em></div>
-        <div class="exercise-row"><span>3</span><strong>Wall push-ups</strong><em>2 sets of 8</em></div>
-        <div class="exercise-row"><span>4</span><strong>Standing calf raises</strong><em>2 sets of 10</em></div>
-      </div>
+    <section class="stayfit-layout" aria-label="Stay Fit routine workspace">
+      <section class="stayfit-column stayfit-column--list" aria-labelledby="exercise-list-title">
+        <div class="stayfit-section-heading">
+          <h2 id="exercise-list-title">Exercise order</h2>
+          <span id="routine-level" class="mode-pill">Beginner</span>
+        </div>
+        <div id="exercise-list" class="routine-list routine-list--loading" aria-live="polite">
+          <p>Loading exercises...</p>
+        </div>
+      </section>
 
-      <aside class="detail-panel">
-        <h2>Guidance</h2>
-        <p>Start gently and keep the effort conversational. If you have not exercised recently or have an existing condition, check with a health professional first.</p>
-        <a class="btn-primary btn-inline" href="/dashboard/">Back to result</a>
+      <section class="timer-panel" aria-labelledby="timer-title">
+        <p class="timer-kicker" id="timer-title">Let's get moving</p>
+        <div class="timer-ring" aria-live="polite">
+          <span id="timer-display">06:00</span>
+          <small>Total time</small>
+        </div>
+        <div class="timer-controls">
+          <button type="button" class="timer-mini-btn" id="timer-add-minute">+1 min</button>
+          <label>
+            <input id="timer-minutes" type="number" min="1" max="60" value="6">
+            <span>min</span>
+          </label>
+          <label>
+            <input id="timer-seconds" type="number" min="0" max="59" value="0">
+            <span>sec</span>
+          </label>
+        </div>
+        <div class="timer-actions">
+          <button type="button" class="btn-primary" id="timer-toggle">Start</button>
+          <button type="button" class="btn-secondary" id="timer-reset">Reset</button>
+        </div>
+        <p id="timer-status" class="timer-status">Ready when you are.</p>
+      </section>
+
+      <aside class="guidance-panel" aria-labelledby="guidance-title">
+        <div class="guidance-figure" aria-hidden="true">
+          <img src="/static/img/logo.png" alt="">
+        </div>
+        <div class="guidance-tip">
+          <span class="guidance-icon" aria-hidden="true">i</span>
+          <div>
+            <h2 id="guidance-title">Tip</h2>
+            <p id="guidance-copy">Move at your own pace and take breaks when you need to.</p>
+          </div>
+        </div>
+        <p id="safety-note" class="guidance-safety"></p>
       </aside>
     </section>
+
+    <p class="stayfit-source-note" id="guideline-note"></p>
   </main>
+
+  <div class="exercise-modal" id="exercise-modal" hidden>
+    <div class="exercise-modal-backdrop" data-modal-close></div>
+    <section class="exercise-modal-panel" role="dialog" aria-modal="true" aria-labelledby="exercise-modal-title">
+      <button type="button" class="exercise-modal-close" data-modal-close aria-label="Close exercise details">x</button>
+      <p class="eyebrow" id="exercise-modal-category">Exercise detail</p>
+      <h2 id="exercise-modal-title">Exercise</h2>
+      <div id="exercise-modal-media" class="exercise-modal-media"></div>
+      <dl class="exercise-meta" id="exercise-modal-meta"></dl>
+      <h3>How to do it</h3>
+      <p id="exercise-modal-instructions"></p>
+      <p id="exercise-modal-source" class="exercise-modal-source"></p>
+    </section>
+  </div>
 
   <div data-include="footer"></div>
   <script src="/static/core/js/include.js"></script>
+  <script src="/static/core/js/stayfit.js"></script>
 </body>
 </html>

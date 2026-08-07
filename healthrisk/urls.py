@@ -12,4 +12,6 @@ urlpatterns = [
     path('readmore/', views.readmore, name='readmore'),
     path('source/', views.source, name='source'),
     path('stayfit/', views.stayfit, name='stayfit'),
+    path('api/stayfit/routine/', views.api_stayfit_routine, name='api_stayfit_routine'),
+    path('api/stayfit/reshuffle/', views.api_stayfit_reshuffle, name='api_stayfit_reshuffle'),
 ]

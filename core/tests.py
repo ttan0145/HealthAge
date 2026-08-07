@@ -5,6 +5,7 @@ from django.test import SimpleTestCase, TestCase
 from django.urls import reverse
 
 from .health_data_gateway import _database_is_configured
+from .stayfit_api import build_stayfit_routine
 
 
 class HealthDataGatewayConfigurationTests(SimpleTestCase):
@@ -17,6 +18,54 @@ class HealthDataGatewayConfigurationTests(SimpleTestCase):
         databases = {"default": {"ENGINE": "django.db.backends.sqlite3"}}
         with patch.dict(settings.DATABASES, databases, clear=True):
             self.assertFalse(_database_is_configured())
+
+    @patch("core.stayfit_api._database_exercise_pool")
+    def test_stayfit_routine_prefers_database_exercise_pool(self, database_pool):
+        database_pool.return_value = [
+            {
+                "id": "db_step",
+                "wger_id": 1,
+                "wger_uuid": None,
+                "name": "Database Step",
+                "category": "Cardio",
+                "equipment": "none",
+                "muscles": ["Quads"],
+                "sets": 1,
+                "reps": 8,
+                "duration_seconds": None,
+                "instructions": "Step in place.",
+                "image_url": None,
+                "video_url": None,
+                "source_url": "https://wger.de/",
+                "source_note": "Loaded from test database pool.",
+                "difficulty": "beginner",
+                "plan_tags": ["cardio_core"],
+            },
+            {
+                "id": "db_breath",
+                "wger_id": 2,
+                "wger_uuid": None,
+                "name": "Database Breath",
+                "category": "Chest",
+                "equipment": "none",
+                "muscles": ["Chest"],
+                "sets": 1,
+                "reps": None,
+                "duration_seconds": 30,
+                "instructions": "Breathe slowly.",
+                "image_url": None,
+                "video_url": None,
+                "source_url": "https://wger.de/",
+                "source_note": "Loaded from test database pool.",
+                "difficulty": "beginner",
+                "plan_tags": ["cardio_core"],
+            },
+        ]
+
+        routine = build_stayfit_routine()
+
+        self.assertEqual(routine["exercises"][0]["id"], "db_step")
+        self.assertEqual(routine["exercises"][1]["name"], "Database Breath")
 
 
 class HealthAgeFlowTests(TestCase):
@@ -119,3 +168,30 @@ class HealthAgeFlowTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Sources used by HealthAge")
+
+    def test_stayfit_page_loads_dynamic_hooks(self):
+        response = self.client.get(reverse("stayfit"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'id="exercise-list"')
+        self.assertContains(response, "/static/core/js/stayfit.js")
+
+    def test_stayfit_routine_api_returns_mr_lim_contract(self):
+        response = self.client.get(reverse("api_stayfit_routine"))
+
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["persona"]["name"], "Mr Lim Wei Jian")
+        self.assertEqual(data["title"], "Today's routine: cardio and core")
+        self.assertEqual(len(data["exercises"]), 4)
+        self.assertEqual(data["exercises"][0]["id"], "step_jack")
+        self.assertIn("guidance_tip", data)
+        self.assertIn("wger", data["source"]["usage"])
+
+    def test_stayfit_reshuffle_api_replaces_current_exercise(self):
+        response = self.client.get(reverse("api_stayfit_reshuffle"), {"current": "step_jack"})
+
+        self.assertEqual(response.status_code, 200)
+        exercise = response.json()["exercise"]
+        self.assertNotEqual(exercise["id"], "step_jack")
+        self.assertIn("instructions", exercise)

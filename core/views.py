@@ -1,4 +1,6 @@
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
+from django.views.decorators.http import require_GET
 
 from .risk_engine import (
     MALAYSIA_STATES,
@@ -6,6 +8,7 @@ from .risk_engine import (
     build_risk_result,
     validate_profile,
 )
+from .stayfit_api import build_stayfit_routine, get_replacement_exercise
 
 HABIT_OPTIONS = [
     "Smoking",
@@ -128,3 +131,18 @@ def source(request):
 def stayfit(request):
     result = request.session.get("risk_result")
     return render(request, "core/stayfit.html", {"result": result})
+
+
+@require_GET
+def api_stayfit_routine(request):
+    level = request.GET.get("level", "beginner").strip().lower() or "beginner"
+    if level not in {"beginner", "standard", "progress"}:
+        level = "beginner"
+    return JsonResponse(build_stayfit_routine(level=level))
+
+
+@require_GET
+def api_stayfit_reshuffle(request):
+    current_id = request.GET.get("current")
+    plan_tag = request.GET.get("plan", "cardio_core").strip().lower() or "cardio_core"
+    return JsonResponse({"exercise": get_replacement_exercise(current_id, plan_tag=plan_tag)})

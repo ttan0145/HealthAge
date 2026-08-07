@@ -16,6 +16,7 @@ The current implementation is designed to run with or without the team Neon data
 5. Read More explains the prioritised risk in plain language.
 6. Source lists the public datasets used by the MVP.
 7. Stay Fit provides a minimal starter routine for the exercise action path.
+8. Stay Fit API returns a dynamic routine JSON contract for the page, with Neon exercise-table support and a local fallback pool.
 
 ## Project Structure
 
@@ -44,6 +45,8 @@ Important files:
 - `core/health_data_gateway.py` is the reserved database access boundary for the team ERD.
 - `core/templates/core/` contains the HTML screens.
 - `core/static/core/css/style.css` contains the shared visual system and page styles.
+- `core/stayfit_api.py` builds the Stay Fit routine and reshuffle API payloads.
+- `core/static/core/js/stayfit.js` renders the Stay Fit routine, timer, modal and swap interactions.
 
 ## Setup
 
@@ -101,6 +104,13 @@ Open:
 http://127.0.0.1:8000/
 ```
 
+Stay Fit API endpoints:
+
+```text
+http://127.0.0.1:8000/api/stayfit/routine/
+http://127.0.0.1:8000/api/stayfit/reshuffle/?current=step_jack
+```
+
 ## Tests
 
 Run the Django test suite:
@@ -115,6 +125,7 @@ The current tests cover:
 - Profile and lifestyle submission into a dashboard result.
 - Read More redirect behavior when no result exists.
 - Public Source page rendering.
+- Stay Fit routine API contract, reshuffle API, and dynamic page hooks.
 
 By default, `manage.py test` uses a local SQLite test database even when Neon environment variables are present. This prevents Django from creating or dropping test databases on the shared Neon project. Set `ALLOW_REMOTE_TEST_DATABASE=True` only if the team explicitly wants to run tests against Postgres.
 
@@ -138,6 +149,13 @@ The current code reserves interfaces for the ERD shared by the team:
 The live Neon database may still differ from this design. `health_data_gateway.py` currently inspects available table and column names defensively, preferring the ERD names while still tolerating imported names such as `death_records` and `causes_of_death`. Once the team confirms the exact production schema, the gateway should be tightened to explicit SQL queries.
 
 The MVP stores `User_Profile` and `Match_Result` data in the Django session for now. Persisting those records should be added only after the team confirms whether session-only behaviour remains acceptable for the onboarding iteration.
+
+Stay Fit exercise data currently supports two modes:
+
+- If a Neon/Postgres `exercise` table exists, `core/stayfit_api.py` reads the curated wger-sourced exercise pool from that table.
+- If the table is unavailable, the app uses the local curated fallback pool so the demo remains stable.
+
+The prepared Neon SQL seed is available at `docs/sql/stayfit_exercise_seed.sql`. Review the shared database before running it.
 
 ## Development Notes
 
