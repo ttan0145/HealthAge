@@ -5,108 +5,92 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stay Fit</title>
 <link rel="stylesheet" href="/static/core/css/style.css">
+</head>
 <body class="lp-body">
-
   <div data-include="nav"></div>
 
-  <main class="sf-main">
-    <header class="sf-header">
-      <h1 class="sf-title">Today's routine: cardio and core</h1>
-      <p class="sf-subtitle">A short routine to keep your heart strong and your core steady</p>
-    </header>
+  <main class="source-main stayfit-main">
+    <p class="eyebrow">Stay Fit</p>
+    <h1 class="reading-title" id="routine-title">Today's routine</h1>
+    <p class="reading-lead" id="routine-subtitle">Loading your routine...</p>
 
-    <div class="sf-grid">
+    <section class="risk-picker" aria-labelledby="risk-picker-title">
+      <div>
+        <h2 id="risk-picker-title">Health focus</h2>
+        <p>Choose a condition to view a general beginner routine. Nothing is saved.</p>
+      </div>
+      <div id="risk-options" class="risk-options" aria-label="Health focus options"></div>
+    </section>
 
-      <!-- Routine list -->
-      <section class="sf-card sf-steps" aria-label="Routine steps">
-        <div class="sf-step">
-          <div class="sf-step-marker"><span class="sf-step-num">1</span></div>
-          <div class="sf-step-body">
-            <p class="sf-step-title">Bodyweight squats</p>
-            <p class="sf-step-meta">3 sets x 15 reps</p>
-          </div>
+    <section class="stayfit-layout" aria-label="Stay Fit routine workspace">
+      <section class="stayfit-column stayfit-column--list" aria-labelledby="exercise-list-title">
+        <div class="stayfit-section-heading">
+          <h2 id="exercise-list-title">Exercise order</h2>
+          <span id="routine-level" class="mode-pill">Beginner</span>
         </div>
-        <div class="sf-step">
-          <div class="sf-step-marker"><span class="sf-step-num">2</span></div>
-          <div class="sf-step-body">
-            <p class="sf-step-title">Wall push-ups</p>
-            <p class="sf-step-meta">3 sets x 15 reps</p>
-          </div>
-        </div>
-        <div class="sf-step">
-          <div class="sf-step-marker"><span class="sf-step-num">3</span></div>
-          <div class="sf-step-body">
-            <p class="sf-step-title">Standing marches</p>
-            <p class="sf-step-meta">3 sets x 15 reps</p>
-          </div>
-        </div>
-        <div class="sf-step">
-          <div class="sf-step-marker"><span class="sf-step-num">4</span></div>
-          <div class="sf-step-body">
-            <p class="sf-step-title">Plank hold</p>
-            <p class="sf-step-meta">3 sets x 20 sec</p>
-          </div>
+        <div id="exercise-list" class="routine-list routine-list--loading" aria-live="polite">
+          <p>Loading exercises...</p>
         </div>
       </section>
 
-      <!-- Timer -->
-      <section class="sf-card sf-timer-card" aria-label="Workout timer">
-        <p class="sf-timer-label">Let's get moving!</p>
-
-        <div class="sf-ring-wrap">
-          <svg class="sf-ring" viewBox="0 0 220 220">
-            <circle class="sf-ring-track" cx="110" cy="110" r="98"></circle>
-            <circle class="sf-ring-progress" cx="110" cy="110" r="98"></circle>
-          </svg>
-          <div class="sf-ring-center">
-            <span class="sf-time" id="sfTime">06:00</span>
-            <span class="sf-time-caption">Total time</span>
-          </div>
+      <section class="timer-panel" aria-labelledby="timer-title">
+        <p class="timer-kicker" id="timer-title">Let's get moving</p>
+        <div class="timer-ring" aria-live="polite">
+          <span id="timer-display">06:00</span>
+          <small>Total time</small>
         </div>
-
-        <div class="sf-controls">
-          <button type="button" class="sf-pill-btn" id="sfAddMin">+1 min</button>
-
-          <div class="sf-num-field">
-            <input type="number" id="sfMinInput" class="sf-num-input" value="6" min="0" max="99" inputmode="numeric">
-            <span class="sf-num-unit">min</span>
-          </div>
-
-          <div class="sf-num-field">
-            <input type="number" id="sfSecInput" class="sf-num-input" value="0" min="0" max="59" inputmode="numeric">
-            <span class="sf-num-unit">sec</span>
-          </div>
+        <div class="timer-controls">
+          <button type="button" class="timer-mini-btn" id="timer-add-minute">+1 min</button>
+          <label>
+            <input id="timer-minutes" type="number" min="1" max="60" value="6">
+            <span>min</span>
+          </label>
+          <label>
+            <input id="timer-seconds" type="number" min="0" max="59" value="0">
+            <span>sec</span>
+          </label>
         </div>
-
-        <button type="button" class="sf-start-btn" id="sfStartBtn">
-          <span id="sfStartLabel">Start</span>
-          <svg id="sfStartIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 2.5v11l9-5.5-9-5.5z" fill="currentColor"/>
-          </svg>
-        </button>
+        <div class="timer-actions">
+          <button type="button" class="btn-primary" id="timer-toggle">Start</button>
+          <button type="button" class="btn-secondary" id="timer-reset">Reset</button>
+        </div>
+        <p id="timer-status" class="timer-status">Ready when you are.</p>
       </section>
 
-      <!-- Mascot + tip -->
-      <section class="sf-card sf-side-card" aria-label="Encouragement">
-        <div class="sf-mascot" aria-hidden="true">
-            <img src="/static/img/grandpa.png" alt="A friendly mascot encouraging you to stay fit" style="width: 200px; height: auto;>
+      <aside class="guidance-panel" aria-labelledby="guidance-title">
+        <div class="guidance-figure" aria-hidden="true">
+          <img src="/static/img/grandpa.png" alt="">
         </div>
-        <div class="sf-tip">
-          <svg class="sf-tip-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3 11.2c.5.3.8.9.8 1.5V16h4.4v-.3c0-.6.3-1.2.8-1.5A6 6 0 0 0 12 3z" stroke="#8fe3b0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <p class="sf-tip-text"><strong>Tip</strong><br>Move at your own pace and take breaks when you need to</p>
+        <div class="guidance-tip">
+          <span class="guidance-icon" aria-hidden="true">i</span>
+          <div>
+            <h2 id="guidance-title">Tip</h2>
+            <p id="guidance-copy">Move at your own pace and take breaks when you need to.</p>
+          </div>
         </div>
-      </section>
+        <p id="safety-note" class="guidance-safety"></p>
+      </aside>
+    </section>
 
-    </div>
-
-    <p class="sf-footnote">Exercise recommendations align with Saranan Aktiviti Fizikal Malaysia, Ministry of Health Malaysia, and support UN Sustainable Development Goal 3, Good Health and Well-Being. Guideline: <strong>infosihat.moh.gov.my</strong></p>
+    <p class="stayfit-source-note" id="guideline-note"></p>
   </main>
 
+  <div class="exercise-modal" id="exercise-modal" hidden>
+    <div class="exercise-modal-backdrop" data-modal-close></div>
+    <section class="exercise-modal-panel" role="dialog" aria-modal="true" aria-labelledby="exercise-modal-title">
+      <button type="button" class="exercise-modal-close" data-modal-close aria-label="Close exercise details">x</button>
+      <p class="eyebrow" id="exercise-modal-category">Exercise detail</p>
+      <h2 id="exercise-modal-title">Exercise</h2>
+      <div id="exercise-modal-media" class="exercise-modal-media"></div>
+      <dl class="exercise-meta" id="exercise-modal-meta"></dl>
+      <h3>How to do it</h3>
+      <p id="exercise-modal-instructions"></p>
+      <p id="exercise-modal-source" class="exercise-modal-source"></p>
+    </section>
+  </div>
+
   <div data-include="footer"></div>
-
   <script src="/static/core/js/include.js"></script>
-
+  <script src="/static/core/js/stayfit.js"></script>
 </body>
 </html>

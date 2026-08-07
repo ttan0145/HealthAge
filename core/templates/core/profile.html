@@ -12,7 +12,7 @@
 
   <div class="onboard-shell">
     <div class="onboard-card">
-      
+
       <a href="/" class="back-link">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         Back
@@ -23,18 +23,29 @@
 
       <p class="onboard-step">Step 1 of 2. Tell us a little about yourself so we can compare you to real health data.</p>
 
-      <form class="onboard-form" action="/lifestyle/">
-        <label class="field-label" for="full_name">Full name</label>
-        <input class="field-input" type="text" id="full_name" name="full_name" value="Lim Wei Jian">
-
+      <form class="onboard-form" action="/profile/" method="post" novalidate>
+        {% csrf_token %}
         <label class="field-label" for="age">Age</label>
-        <input class="field-input" type="text" id="age" name="age" value="48">
+        <input class="field-input" type="number" id="age" name="age" min="18" max="100" value="{{ profile.age|default:'' }}" placeholder="48">
+        {% if errors.age %}<p class="field-error">{{ errors.age }}</p>{% endif %}
 
-        <label class="field-label" for="gender">Gender</label>
-        <input class="field-input" type="text" id="gender" name="gender" value="Male">
+        <label class="field-label" for="sex">Sex</label>
+        <select class="field-input" id="sex" name="sex">
+          <option value="">Select one</option>
+          {% for option in sex_options %}
+          <option value="{{ option }}" {% if option == profile.sex %}selected{% endif %}>{{ option }}</option>
+          {% endfor %}
+        </select>
+        {% if errors.sex %}<p class="field-error">{{ errors.sex }}</p>{% endif %}
 
         <label class="field-label" for="state">State</label>
-        <input class="field-input" type="text" id="state" name="state" value="Selangor">
+        <select class="field-input" id="state" name="state">
+          <option value="">Select one</option>
+          {% for option in states %}
+          <option value="{{ option }}" {% if option == profile.state %}selected{% endif %}>{{ option }}</option>
+          {% endfor %}
+        </select>
+        {% if errors.state %}<p class="field-error">{{ errors.state }}</p>{% endif %}
 
         <button type="submit" class="btn-primary btn-block">Continue</button>
       </form>

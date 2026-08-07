@@ -18,14 +18,12 @@
       Back to my plan
     </a>
 
-    <!-- Header --------------------------------------------------- -->
     <header class="rm-header">
       <p class="eyebrow">{% if is_top_risk %}Your top risk{% else %}Risk we checked{% endif %}</p>
       <h1 class="rm-title">{{ risk.name }}</h1>
       <p class="rm-lead">{{ risk.lead }}</p>
     </header>
 
-    <!-- Scale of it, for this user's group ----------------------- -->
     <section class="rm-stats">
       {% if here %}
       <div class="rm-stat">
@@ -52,12 +50,9 @@
       {% endif %}
     </section>
 
-    <!-- Work 1: cause of death statistics for this age and gender -->
     <section class="rm-section">
       <div class="section-heading"><h2>Causes of death, {{ stats.group_label }}</h2></div>
-      <p class="rm-section-intro">
-        {{ stats.headline }}
-      </p>
+      <p class="rm-section-intro">{{ stats.headline }}</p>
 
       <div class="stat-rows">
         {% for cause in stats.causes %}
@@ -88,7 +83,6 @@
       {% endif %}
     </section>
 
-    <!-- What it is ----------------------------------------------- -->
     <section class="rm-section">
       <div class="section-heading"><h2>What {{ risk.name|lower }} actually is</h2></div>
       {% for para in risk.what_it_is %}
@@ -108,7 +102,6 @@
       </div>
     </section>
 
-    <!-- Changeable vs not ---------------------------------------- -->
     <section class="rm-section">
       <div class="section-heading"><h2>What you can change</h2></div>
 
@@ -134,7 +127,6 @@
       <p class="rm-change-note">{{ risk.change_note }}</p>
     </section>
 
-    <!-- Next step ------------------------------------------------ -->
     <section class="rm-section">
       <div class="section-heading"><h2>What to do about it</h2></div>
       <a class="rm-next" href="/dashboard/">
@@ -151,12 +143,11 @@
       </a>
 
       <div class="rm-links">
-        <a href="/stayfit/" class="rm-link-pill">Ways to get more active</a>
+        <a href="/stayfit/?risk={{ risk.slug }}" class="rm-link-pill">Ways to get more active</a>
         <a href="/lifestyle/" class="rm-link-pill">Update my answers</a>
       </div>
     </section>
 
-    <!-- Other risks ---------------------------------------------- -->
     <section class="rm-section">
       <div class="section-heading"><h2>Other risks we checked</h2></div>
       <div class="rm-others">
@@ -175,7 +166,6 @@
       </div>
     </section>
 
-    <!-- Where this came from ------------------------------------- -->
     <section class="rm-section">
       <div class="section-heading"><h2>Where this comes from</h2></div>
       <p class="rm-body">
@@ -204,7 +194,6 @@
   </main>
 
   <div data-include="footer"></div>
-
   <script src="/static/core/js/include.js"></script>
 </body>
 </html>

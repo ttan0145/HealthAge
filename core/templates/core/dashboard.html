@@ -13,7 +13,13 @@
 
   <main style="width:100%; max-width: 100%;">
 
-    <!-- Loading state, briefly shown then swapped for the top-risk card -->
+    <section class="info-banner disclaimer-banner" style="margin: 24px 28px 0;">
+      <span class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </span>
+      <p><strong>This is not a diagnosis.</strong> HealthAge compares your profile with public Malaysian health statistics. It does not predict individual outcomes.</p>
+    </section>
+
     <section class="card card--matching" id="matching-card" style="padding: 64px 72px 96px">
       <div class="matching-head">
         <span class="spinner" aria-hidden="true"></span>
@@ -23,27 +29,25 @@
     </section>
 
     <div style="padding: 20px 28px 90px;">
-    <div id="next-action-area">
-      <div class="section-heading"></div>
-      <div class="skeleton-block skeleton-block--action">
-        <span class="sk-swatch"></span>
-        <span class="sk-lines">
-          <span class="sk-line sk-line--full"></span>
-          <span class="sk-line sk-line--short"></span>
-        </span>
-      </div>
-    </div>
-
-
-    <div class="risks-grid" id="other-risks-panel" style="margin-top: 20px">
-      
+      <div id="next-action-area">
+        <div class="section-heading"><h2>What to do next</h2></div>
         <div class="skeleton-block skeleton-block--action">
-        <span class="sk-swatch"></span>
-        <span class="sk-lines">
-          <span class="sk-line sk-line--full"></span>
-          <span class="sk-line sk-line--short"></span>
-        </span>
+          <span class="sk-swatch"></span>
+          <span class="sk-lines">
+            <span class="sk-line sk-line--full"></span>
+            <span class="sk-line sk-line--short"></span>
+          </span>
+        </div>
+      </div>
 
+      <div class="risks-grid" id="other-risks-panel" style="margin-top: 20px">
+        <div class="skeleton-block skeleton-block--action">
+          <span class="sk-swatch"></span>
+          <span class="sk-lines">
+            <span class="sk-line sk-line--full"></span>
+            <span class="sk-line sk-line--short"></span>
+          </span>
+        </div>
       </div>
     </div>
 

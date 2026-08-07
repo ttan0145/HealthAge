@@ -5,68 +5,82 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Source</title>
 <link rel="stylesheet" href="/static/core/css/style.css">
+</head>
 <body class="lp-body">
-
   <div data-include="nav"></div>
 
-  <main class="ds-main" style="padding: 20px 28px 90px;">
-    <div class="ds-grid">
+  <main class="source-main">
+    <p class="eyebrow">Data transparency</p>
+    <h1 class="reading-title">Sources used by HealthAge</h1>
+    <p class="reading-lead">HealthAge uses public Malaysian health statistics to prioritise one practical next step. The result is informational and should not be read as a medical diagnosis.</p>
 
-      <div class="ds-card">
-        <h3 class="ds-title"><a href="https://open.dosm.gov.my/data-catalogue/deaths_sex_ethnic_state" target="_blank" rel="noopener noreferrer">DOSM Statistics on Causes of Death</a></h3>
-        <p class="ds-attribution">Department of Statistics Malaysia, 2021 to 2024</p>
-        <p class="ds-desc">Named causes of death by age band, state and sex, used to identify your leading risk. Published at dosm.gov.my.</p>
-        <p class="ds-licence"><strong>Licence:</strong> open data, Department of Statistics Malaysia</p>
-      </div>
+    <section class="source-grid source-grid--wide">
+      <article class="source-card">
+        <p class="source-tag">Mortality</p>
+        <h2><a href="https://open.dosm.gov.my/data-catalogue/deaths_sex_ethnic_state" target="_blank" rel="noopener noreferrer">DOSM Statistics on Causes of Death</a></h2>
+        <p class="source-attribution">Department of Statistics Malaysia, 2021 to 2024</p>
+        <p>Named causes of death by age band, state and sex, used to identify the leading risk for a profile.</p>
+        <p class="source-licence"><strong>Licence:</strong> open data, Department of Statistics Malaysia</p>
+      </article>
 
-      <div class="ds-card">
-        <h3 class="ds-title"><a href="https://open.dosm.gov.my/publications/cod_2023" target="_blank" rel="noopener noreferrer">NHMS 2023/2024</a></h3>
-        <p class="ds-attribution">Institute for Public Health, NHMS 2023</p>
-        <p class="ds-desc">National Health and Morbidity Survey risk factor rates, such as smoking and inactivity, used to compare your habits with the national baseline.</p>
-        <p class="ds-licence"><strong>Licence:</strong> public report, Institute for Public Health</p>
-      </div>
+      <article class="source-card">
+        <p class="source-tag">Risk factors</p>
+        <h2><a href="https://iku.nih.gov.my/NHMS-2024" target="_blank" rel="noopener noreferrer">NHMS 2023/2024</a></h2>
+        <p class="source-attribution">Institute for Public Health</p>
+        <p>National Health and Morbidity Survey risk factor rates, such as smoking and inactivity, used as population context.</p>
+        <p class="source-licence"><strong>Licence:</strong> public report, Institute for Public Health</p>
+      </article>
 
-      <div class="ds-card">
-        <h3 class="ds-title"><a href="https://open.dosm.gov.my/publications/life_expectancy_2024" target="_blank" rel="noopener noreferrer">OpenDOSM Annual Deaths (District / State / Sex / Ethnicity)</a></h3>
-        <p class="ds-attribution">Department of Statistics Malaysia</p>
-        <p class="ds-desc">Department of Statistics Malaysia, annual dataset. Demographic death counts by district, state, sex and ethnicity, used to match users with the most relevant mortality statistics.</p>
-        <p class="ds-licence"><strong>Licence:</strong> open data, Department of Statistics Malaysia</p>
-      </div>
+      <article class="source-card">
+        <p class="source-tag">Deaths</p>
+        <h2><a href="https://open.dosm.gov.my/publications/cod_2023" target="_blank" rel="noopener noreferrer">OpenDOSM Annual Deaths</a></h2>
+        <p class="source-attribution">Department of Statistics Malaysia</p>
+        <p>Annual death count publications used to support demographic mortality context.</p>
+        <p class="source-licence"><strong>Licence:</strong> open data, Department of Statistics Malaysia</p>
+      </article>
 
-      <div class="ds-card">
-        <h3 class="ds-title"><a href="https://iku.nih.gov.my/NHMS-2024" target="_blank" rel="noopener noreferrer">OpenDOSM Life Expectancy &amp; Population Tables</a></h3>
-        <p class="ds-attribution">Department of Statistics Malaysia</p>
-        <p class="ds-desc">Department of Statistics Malaysia, annual life expectancy and population estimates. Provides life expectancy and population context to help users understand mortality trends relative to their demographic group.</p>
-        <p class="ds-licence"><strong>Licence:</strong> open data, Department of Statistics Malaysia</p>
-      </div>
+      <article class="source-card">
+        <p class="source-tag">Life expectancy</p>
+        <h2><a href="https://open.dosm.gov.my/publications/life_expectancy_2024" target="_blank" rel="noopener noreferrer">OpenDOSM Life Expectancy Tables</a></h2>
+        <p class="source-attribution">Department of Statistics Malaysia</p>
+        <p>Life expectancy and population estimates used to explain mortality trends relative to demographic groups.</p>
+        <p class="source-licence"><strong>Licence:</strong> open data, Department of Statistics Malaysia</p>
+      </article>
 
-      <div class="ds-card">
-        <h3 class="ds-title"><a href="https://data.moh.gov.my/data-catalogue/pekab40_screenings_state" target="_blank" rel="noopener noreferrer">KKMNOW Daily PeKaB40 Screenings</a></h3>
-        <p class="ds-attribution">Ministry of Health Malaysia</p>
-        <p class="ds-desc">Ministry of Health Malaysia (KKMNOW). Daily PeKaB40 health screening locations and schedules, used to recommend nearby screening opportunities for eligible users.</p>
-        <p class="ds-licence"><strong>Licence:</strong> open data, Ministry of Health Malaysia</p>
-      </div>
+      <article class="source-card" id="peka">
+        <p class="source-tag">Screening</p>
+        <h2><a href="https://data.moh.gov.my/data-catalogue/pekab40_screenings_state" target="_blank" rel="noopener noreferrer">KKMNOW Daily PeKaB40 Screenings</a></h2>
+        <p class="source-attribution">Ministry of Health Malaysia</p>
+        <p>Daily PeKaB40 screening records used to explain why screening may be the first practical action for eligible users.</p>
+        <p class="source-licence"><strong>Licence:</strong> open data, Ministry of Health Malaysia</p>
+      </article>
 
-      <div class="ds-card">
-        <h3 class="ds-title"><a href="https://wger.de/api/v2/" target="_blank" rel="noopener noreferrer">wger.de Exercise Database</a></h3>
-        <p class="ds-attribution">wger.de</p>
-        <p class="ds-desc">wger Project, open exercise database. Exercise library with muscle groups, instructions and equipment information, used to recommend personalised physical activities based on users' health goals.</p>
-        <p class="ds-licence"><strong>Licence:</strong> open source (AGPL-3.0), wger Project</p>
-      </div>
+      <article class="source-card">
+        <p class="source-tag">Exercise</p>
+        <h2><a href="https://wger.de/api/v2/" target="_blank" rel="noopener noreferrer">wger.de Exercise Database</a></h2>
+        <p class="source-attribution">wger.de</p>
+        <p>Open exercise catalogue used to support future personalised exercise recommendations.</p>
+        <p class="source-licence"><strong>Licence:</strong> open source, AGPL-3.0</p>
+      </article>
 
-      <div class="ds-card">
-        <h3 class="ds-title"><a href="https://nsr.org.my/list11.asp" target="_blank" rel="noopener noreferrer">Specialist Search</a></h3>
-        <p class="ds-attribution">Ministry of Health Malaysia</p>
-        <p class="ds-desc">Ministry of Health Malaysia. Hospital specialist directory used to help users locate relevant medical specialists based on their identified health concern.</p>
-        <p class="ds-licence"><strong>Licence:</strong> public directory, Ministry of Health Malaysia</p>
-      </div>
+      <article class="source-card">
+        <p class="source-tag">Specialist</p>
+        <h2><a href="https://nsr.org.my/list11.asp" target="_blank" rel="noopener noreferrer">Specialist Search</a></h2>
+        <p class="source-attribution">Ministry of Health Malaysia</p>
+        <p>Hospital specialist directory reserved for future redirect actions based on an identified health concern.</p>
+        <p class="source-licence"><strong>Licence:</strong> public directory, Ministry of Health Malaysia</p>
+      </article>
+    </section>
 
-    </div>
+    {% if result %}
+    <section class="detail-panel">
+      <h2>Your current result source note</h2>
+      <p>{{ result.top_risk.note }}</p>
+    </section>
+    {% endif %}
   </main>
 
-
   <div data-include="footer"></div>
-
   <script src="/static/core/js/include.js"></script>
 </body>
 </html>
