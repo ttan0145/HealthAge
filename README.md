@@ -77,6 +77,16 @@ DEBUG=True
 ALLOWED_HOSTS=127.0.0.1,localhost,testserver
 ```
 
+If the team shares split Neon variables instead of one URL, set these keys instead:
+
+```env
+DB_NAME=neondb
+DB_USER=neondb_owner
+DB_PASSWORD=replace-this-locally
+DB_HOST=replace-this-locally
+DB_PORT=5432
+```
+
 Do not commit `.env`. It may contain database credentials.
 
 ## Run Locally
