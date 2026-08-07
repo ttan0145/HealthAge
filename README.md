@@ -106,6 +106,8 @@ The current tests cover:
 - Read More redirect behavior when no result exists.
 - Public Source page rendering.
 
+By default, `manage.py test` uses a local SQLite test database even when Neon environment variables are present. This prevents Django from creating or dropping test databases on the shared Neon project. Set `ALLOW_REMOTE_TEST_DATABASE=True` only if the team explicitly wants to run tests against Postgres.
+
 ## Database Notes
 
 The current code reserves interfaces for the ERD shared by the team:
