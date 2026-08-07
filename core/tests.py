@@ -1,5 +1,22 @@
-from django.test import TestCase
+from unittest.mock import patch
+
+from django.conf import settings
+from django.test import SimpleTestCase, TestCase
 from django.urls import reverse
+
+from .health_data_gateway import _database_is_configured
+
+
+class HealthDataGatewayConfigurationTests(SimpleTestCase):
+    def test_gateway_is_enabled_for_postgresql(self):
+        databases = {"default": {"ENGINE": "django.db.backends.postgresql"}}
+        with patch.dict(settings.DATABASES, databases, clear=True):
+            self.assertTrue(_database_is_configured())
+
+    def test_gateway_is_disabled_for_sqlite(self):
+        databases = {"default": {"ENGINE": "django.db.backends.sqlite3"}}
+        with patch.dict(settings.DATABASES, databases, clear=True):
+            self.assertFalse(_database_is_configured())
 
 
 class HealthAgeFlowTests(TestCase):

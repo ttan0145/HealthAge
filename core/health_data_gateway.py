@@ -187,7 +187,8 @@ def fetch_exercise(exercise_id: int | None) -> ExerciseRecord | None:
 
 
 def _database_is_configured() -> bool:
-    return bool(getattr(settings, "DATABASE_URL", ""))
+    database = settings.DATABASES.get("default", {})
+    return database.get("ENGINE") == "django.db.backends.postgresql"
 
 
 def _sample_table_rows(table: str, limit: int = 2000) -> list[dict[str, Any]]:
