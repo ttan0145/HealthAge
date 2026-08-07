@@ -5,5 +5,108 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stay Fit</title>
 <link rel="stylesheet" href="/static/core/css/style.css">
+<body class="lp-body">
 
-<p>test</p>
+  <div data-include="nav"></div>
+
+  <main class="sf-main">
+    <header class="sf-header">
+      <h1 class="sf-title">Today's routine: cardio and core</h1>
+      <p class="sf-subtitle">A short routine to keep your heart strong and your core steady</p>
+    </header>
+
+    <div class="sf-grid">
+
+      <!-- Routine list -->
+      <section class="sf-card sf-steps" aria-label="Routine steps">
+        <div class="sf-step">
+          <div class="sf-step-marker"><span class="sf-step-num">1</span></div>
+          <div class="sf-step-body">
+            <p class="sf-step-title">Bodyweight squats</p>
+            <p class="sf-step-meta">3 sets x 15 reps</p>
+          </div>
+        </div>
+        <div class="sf-step">
+          <div class="sf-step-marker"><span class="sf-step-num">2</span></div>
+          <div class="sf-step-body">
+            <p class="sf-step-title">Wall push-ups</p>
+            <p class="sf-step-meta">3 sets x 15 reps</p>
+          </div>
+        </div>
+        <div class="sf-step">
+          <div class="sf-step-marker"><span class="sf-step-num">3</span></div>
+          <div class="sf-step-body">
+            <p class="sf-step-title">Standing marches</p>
+            <p class="sf-step-meta">3 sets x 15 reps</p>
+          </div>
+        </div>
+        <div class="sf-step">
+          <div class="sf-step-marker"><span class="sf-step-num">4</span></div>
+          <div class="sf-step-body">
+            <p class="sf-step-title">Plank hold</p>
+            <p class="sf-step-meta">3 sets x 20 sec</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Timer -->
+      <section class="sf-card sf-timer-card" aria-label="Workout timer">
+        <p class="sf-timer-label">Let's get moving!</p>
+
+        <div class="sf-ring-wrap">
+          <svg class="sf-ring" viewBox="0 0 220 220">
+            <circle class="sf-ring-track" cx="110" cy="110" r="98"></circle>
+            <circle class="sf-ring-progress" cx="110" cy="110" r="98"></circle>
+          </svg>
+          <div class="sf-ring-center">
+            <span class="sf-time" id="sfTime">06:00</span>
+            <span class="sf-time-caption">Total time</span>
+          </div>
+        </div>
+
+        <div class="sf-controls">
+          <button type="button" class="sf-pill-btn" id="sfAddMin">+1 min</button>
+
+          <div class="sf-num-field">
+            <input type="number" id="sfMinInput" class="sf-num-input" value="6" min="0" max="99" inputmode="numeric">
+            <span class="sf-num-unit">min</span>
+          </div>
+
+          <div class="sf-num-field">
+            <input type="number" id="sfSecInput" class="sf-num-input" value="0" min="0" max="59" inputmode="numeric">
+            <span class="sf-num-unit">sec</span>
+          </div>
+        </div>
+
+        <button type="button" class="sf-start-btn" id="sfStartBtn">
+          <span id="sfStartLabel">Start</span>
+          <svg id="sfStartIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 2.5v11l9-5.5-9-5.5z" fill="currentColor"/>
+          </svg>
+        </button>
+      </section>
+
+      <!-- Mascot + tip -->
+      <section class="sf-card sf-side-card" aria-label="Encouragement">
+        <div class="sf-mascot" aria-hidden="true">
+            <img src="/static/img/grandpa.png" alt="A friendly mascot encouraging you to stay fit" style="width: 200px; height: auto;>
+        </div>
+        <div class="sf-tip">
+          <svg class="sf-tip-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3 11.2c.5.3.8.9.8 1.5V16h4.4v-.3c0-.6.3-1.2.8-1.5A6 6 0 0 0 12 3z" stroke="#8fe3b0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p class="sf-tip-text"><strong>Tip</strong><br>Move at your own pace and take breaks when you need to</p>
+        </div>
+      </section>
+
+    </div>
+
+    <p class="sf-footnote">Exercise recommendations align with Saranan Aktiviti Fizikal Malaysia, Ministry of Health Malaysia, and support UN Sustainable Development Goal 3, Good Health and Well-Being. Guideline: <strong>infosihat.moh.gov.my</strong></p>
+  </main>
+
+  <div data-include="footer"></div>
+
+  <script src="/static/core/js/include.js"></script>
+
+</body>
+</html>

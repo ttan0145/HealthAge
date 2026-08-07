@@ -914,6 +914,7 @@ body {
   flex-shrink: 0;
   border-top: 1px solid var(--gray-border);
   padding: 28px 40px 10px;
+  margin-top: 40px;
 }
 
 .site-footer-inner {
@@ -933,6 +934,289 @@ body {
 
 .site-footer-note {
   margin: 0;
+}
+
+/* ================================================================== */
+/* Stay Fit — routine + timer page                                     */
+/* ================================================================== */
+
+.sf-main {
+  flex: 1 0 auto;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 48px 40px 60px;
+  box-sizing: border-box;
+}
+
+.sf-header { margin-bottom: 32px; }
+
+.sf-title {
+  margin: 0 0 8px;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.sf-subtitle {
+  margin: 0;
+  font-size: 15px;
+  color: var(--gray-muted);
+}
+
+.sf-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 1.2fr 0.9fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.sf-card {
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: var(--radius-lg);
+  box-sizing: border-box;
+}
+
+/* --- routine list --- */
+
+.sf-steps { padding: 4px 0; }
+
+.sf-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 22px 24px;
+  border-bottom: 1px solid var(--gray-border);
+}
+
+.sf-step:last-child { border-bottom: none; }
+
+.sf-step-marker { position: relative; flex-shrink: 0; }
+
+.sf-step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--green-bg);
+  color: var(--green-strong);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.sf-step:not(:last-child) .sf-step-marker::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 38px;
+  transform: translateX(-50%);
+  width: 0;
+  height: 24px;
+  border-left: 2px dotted var(--gray-border);
+}
+
+.sf-step-title {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.sf-step-meta {
+  margin: 0;
+  font-size: 14px;
+  color: var(--gray-muted);
+}
+
+/* --- timer card --- */
+
+.sf-timer-card {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sf-timer-label {
+  margin: 0 0 20px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--green-strong);
+}
+
+.sf-ring-wrap {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  margin-bottom: 24px;
+}
+
+.sf-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+
+.sf-ring-track {
+  fill: none;
+  stroke: var(--green-bg);
+  stroke-width: 12;
+}
+
+.sf-ring-progress {
+  fill: none;
+  stroke: var(--green-strong);
+  stroke-width: 12;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.3s linear;
+}
+
+.sf-ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sf-time {
+  font-size: 44px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: 1px;
+}
+
+.sf-time-caption {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--gray-muted);
+}
+
+.sf-controls {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.sf-pill-btn {
+  flex: 1;
+  border: 1px solid var(--green-strong);
+  color: var(--green-strong);
+  background: var(--white);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0 12px;
+}
+
+.sf-pill-btn:hover { background: var(--green-bg); }
+
+.sf-num-field {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--gray-border);
+  border-radius: var(--radius-md);
+  padding: 0 12px;
+}
+
+.sf-num-input {
+  width: 40px;
+  border: none;
+  outline: none;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  text-align: right;
+  -moz-appearance: textfield;
+  background: transparent;
+}
+
+.sf-num-input::-webkit-outer-spin-button,
+.sf-num-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.sf-num-unit {
+  font-size: 14px;
+  color: var(--gray-muted);
+}
+
+.sf-start-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--green-strong);
+  color: var(--white);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sf-start-btn:hover { background: #175136; }
+
+/* --- mascot / tip side card --- */
+
+.sf-side-card {
+  background: var(--green-bg);
+  padding: 28px 24px 24px;
+  height: 445px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sf-mascot { width: 100%; max-width: 200px; margin-bottom: 20px; }
+.sf-mascot svg { display: block; }
+
+.sf-tip {
+  width: 100%;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: #123c29;
+  color: var(--white);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.sf-tip-icon { flex-shrink: 0; margin-top: 2px; }
+
+.sf-tip-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.sf-tip-text strong { display: block; margin-bottom: 2px; }
+
+.sf-footnote {
+  margin: 32px 0 0;
+  font-size: 13px;
+  color: var(--gray-muted);
+}
+
+.sf-footnote strong { color: var(--ink); }
+
+@media (max-width: 1100px) {
+  .sf-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .sf-main { padding: 32px 20px 48px; }
+  .sf-controls { flex-direction: column; }
 }
 
 /* ================================================================== */
