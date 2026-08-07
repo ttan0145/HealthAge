@@ -10,13 +10,13 @@ The current implementation is designed to run with or without the team Neon data
 ## Current Flow
 
 1. Landing page explains the value proposition and evidence base.
-2. Profile intake collects name, age, sex, and Malaysian state.
+2. Profile intake collects age, sex, and Malaysian state.
 3. Lifestyle intake collects habits and family history.
 4. Dashboard shows the top risk, one recommended action, other assessed risks, and a non-diagnosis disclaimer.
 5. Read More explains the prioritised risk in plain language.
 6. Source lists the public datasets used by the MVP.
-7. Stay Fit provides a minimal starter routine for the exercise action path.
-8. Stay Fit API returns a dynamic routine JSON contract for the page, with Neon exercise-table support and a local fallback pool.
+7. Stay Fit renders a dynamic routine for the exercise action path, including an exercise list, timer, guidance panel, exercise detail modal, and swap interaction.
+8. Stay Fit API returns a stable routine JSON contract for the page, with Neon exercise-table support and a local fallback pool.
 
 ## Project Structure
 
@@ -47,6 +47,7 @@ Important files:
 - `core/static/core/css/style.css` contains the shared visual system and page styles.
 - `core/stayfit_api.py` builds the Stay Fit routine and reshuffle API payloads.
 - `core/static/core/js/stayfit.js` renders the Stay Fit routine, timer, modal and swap interactions.
+- `core/static/img/grandpa.png` is the Stay Fit guidance mascot asset integrated from the latest `main` branch.
 
 ## Setup
 
@@ -111,6 +112,27 @@ http://127.0.0.1:8000/api/stayfit/routine/
 http://127.0.0.1:8000/api/stayfit/reshuffle/?current=step_jack
 ```
 
+## Stay Fit Collaboration Handoff
+
+The Stay Fit work is split by API/data and frontend interaction:
+
+- Backend/API boundary: `core/stayfit_api.py`, `core/views.py`, `healthrisk/urls.py`, and `docs/sql/stayfit_exercise_seed.sql`.
+- Frontend boundary: `core/templates/core/stayfit.html`, `core/static/core/js/stayfit.js`, and the Stay Fit styles in `core/static/core/css/style.css`.
+- Shared include logic should stay in `core/static/core/js/include.js`; page-specific timer or modal logic belongs in `stayfit.js`.
+
+Useful handoff documents:
+
+- Chinese API contract: `docs/stayfit-api-contract-zh.md`
+- Chinese implementation handoff: `docs/stayfit-handoff-zh.md`
+
+Current Stay Fit status:
+
+- The page consumes `/api/stayfit/routine/` instead of hardcoded exercise rows.
+- Exercise details are displayed in a modal using image/video fields when available and written instructions as fallback.
+- Swap calls `/api/stayfit/reshuffle/` and replaces only one exercise row.
+- Timer logic is implemented in `stayfit.js`, not in the shared include script.
+- The latest `main` mascot image has been integrated into the guidance panel.
+
 ## Tests
 
 Run the Django test suite:
@@ -126,6 +148,7 @@ The current tests cover:
 - Read More redirect behavior when no result exists.
 - Public Source page rendering.
 - Stay Fit routine API contract, reshuffle API, and dynamic page hooks.
+- Stay Fit database-preferred exercise pool with local fallback.
 
 By default, `manage.py test` uses a local SQLite test database even when Neon environment variables are present. This prevents Django from creating or dropping test databases on the shared Neon project. Set `ALLOW_REMOTE_TEST_DATABASE=True` only if the team explicitly wants to run tests against Postgres.
 
