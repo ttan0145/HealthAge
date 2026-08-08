@@ -16,6 +16,7 @@ const SAMPLE_DATA = {
     type: "screening",
     title: "Book a screening",
     subtitle: "3 government clinics within 5 km. Screening is free under PeKaB40 if you qualify. This is the one thing worth doing first.",
+    target: "/source/#peka",
   },
   other_risks: [
     {
@@ -67,16 +68,17 @@ function renderActionCard(action) {
   const isRoutine = action.type === "routine";
   const modifier = isRoutine ? "action-card--routine" : "action-card--screening";
   const icon = isRoutine ? ICON_RUN : ICON_STETHOSCOPE;
+  const target = action.target || (isRoutine ? "/stayfit/" : "/source/#peka");
 
   return `
-    <button class="action-card ${modifier}" type="button">
+    <a class="action-card ${modifier}" href="${target}">
       <span class="action-icon">${icon}</span>
       <span class="action-body">
         <p class="action-title">${action.title}</p>
         <p class="action-subtitle">${action.subtitle}</p>
       </span>
       <span class="icon action-chevron">${ICON_CHEVRON}</span>
-    </button>
+    </a>
   `;
 }
 
