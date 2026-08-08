@@ -89,10 +89,10 @@ ORDINALS = {1: "1st", 2: "2nd", 3: "3rd"}
 # app can actually act on, and the exclusion is stated on screen rather than
 # hidden. Its deaths still count toward the "all other causes" remainder, so
 # no percentage is inflated by removing it.
-EXCLUDED_CAUSES = {"Transport accidents"}
+EXCLUDED_CAUSES = {"Transport accidents", "Intentional self-harm"}
 
 EXCLUSION_NOTE = (
-    "Road traffic deaths are published in the same table but excluded here, "
+    "Road traffic and intentional self-harm deaths are published in the same table but excluded here, "
     "because this tool covers health conditions rather than injury."
 )
 
