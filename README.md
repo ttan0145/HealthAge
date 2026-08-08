@@ -132,9 +132,10 @@ Current Stay Fit status:
 - The page shows disease/risk focus buttons and consumes `/api/stayfit/routine/?risk=<risk_key>` instead of hardcoded exercise rows.
 - The current supported focus keys are `heart_disease`, `stroke`, `type_2_diabetes`, `respiratory_disease`, and `cancer`.
 - The Stay Fit focus choice is not saved to the database or session; it only travels as a request query parameter.
-- Exercise details are displayed in a modal using image/video fields when available and written instructions as fallback.
+- Exercise order rows select the active guidance exercise only; they do not open the detail modal.
+- Exercise details are displayed from the guidance panel modal using image/video fields when available and written instructions as fallback.
 - Swap calls `/api/stayfit/reshuffle/` with the current focus and replaces only one exercise row.
-- Timer logic is implemented in `stayfit.js`, not in the shared include script.
+- Timer logic is implemented in `stayfit.js`, not in the shared include script, and it does not auto-advance the exercise order.
 - The latest `main` mascot image has been integrated into the guidance panel.
 
 ## Tests

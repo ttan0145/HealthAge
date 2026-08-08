@@ -181,6 +181,20 @@ class StaticAcceptanceTests(SimpleTestCase):
             self.assertIn(video_flag, stayfit_js)
         self.assertIn("renderGuidelineNote", stayfit_js)
 
+    def test_stayfit_exercise_order_is_user_directed_without_list_modal(self):
+        stayfit_js = project_file("core/static/core/js/stayfit.js")
+
+        self.assertNotIn("showGuidanceExercise(stayfitState.activeExerciseIndex + 1)", stayfit_js)
+        self.assertNotIn("startExerciseCarousel();", stayfit_js)
+
+        list_click_block = (
+            'detailButton.addEventListener("click", () => {\n'
+            "      showGuidanceExercise(index);\n"
+            "    });"
+        )
+        self.assertIn(list_click_block, stayfit_js)
+        self.assertIn('panel.addEventListener("click", openCurrentGuidanceExercise)', stayfit_js)
+
 
 class HealthAgeFlowTests(TestCase):
     valid_profile = {

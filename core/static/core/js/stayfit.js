@@ -75,7 +75,6 @@ function applyRoutine(routine) {
   renderRiskOptions(routine.risk_options || [], stayfitState.selectedRisk);
   renderExercises();
   showGuidanceExercise(0);
-  startExerciseCarousel();
   syncRiskUrl(stayfitState.selectedRisk);
 }
 
@@ -120,8 +119,6 @@ function renderExercises() {
     detailButton.className = "exercise-main";
     detailButton.addEventListener("click", () => {
       showGuidanceExercise(index);
-      startExerciseCarousel();
-      openExerciseModal(exercise);
     });
 
     const badge = document.createElement("span");
@@ -177,7 +174,6 @@ async function reshuffleExercise(index, button) {
     stayfitState.activeExerciseIndex = index;
     renderExercises();
     showGuidanceExercise(index);
-    startExerciseCarousel();
   } catch (error) {
     button.disabled = false;
     button.textContent = "Try again";
@@ -193,13 +189,9 @@ function showGuidanceExercise(index) {
 }
 
 function startExerciseCarousel() {
+  // The exercise order should remain user-directed. Keep this as a no-op
+  // guard so older event hooks never restart the previous auto-rotation.
   stopExerciseCarousel();
-  if (stayfitState.isModalOpen) return;
-  if (stayfitState.isGuidanceHovered) return;
-  if (stayfitState.exercises.length < 2) return;
-  stayfitState.carouselId = window.setInterval(() => {
-    showGuidanceExercise(stayfitState.activeExerciseIndex + 1);
-  }, 2000);
 }
 
 function stopExerciseCarousel() {
@@ -242,7 +234,6 @@ function pauseGuidanceCarousel() {
 
 function resumeGuidanceCarousel() {
   stayfitState.isGuidanceHovered = false;
-  startExerciseCarousel();
 }
 
 function openCurrentGuidanceExercise() {
@@ -339,7 +330,6 @@ function closeExerciseModal() {
   document.getElementById("exercise-modal").hidden = true;
   document.body.classList.remove("modal-open");
   stayfitState.isModalOpen = false;
-  startExerciseCarousel();
 }
 
 function bindModalControls() {
