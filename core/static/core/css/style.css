@@ -937,6 +937,7 @@ body {
   flex-shrink: 0;
   border-top: 1px solid var(--gray-border);
   padding: 28px 40px 10px;
+  background: #F4F6F5
 }
 
 .site-footer-inner {
@@ -1131,9 +1132,7 @@ body {
   display: inline-flex;
   width: fit-content;
   margin: 0 0 14px !important;
-  padding: 5px 10px;
   border-radius: 999px;
-  background: var(--green-bg);
   color: var(--green-text) !important;
   font-size: 13px !important;
   font-weight: 800;
