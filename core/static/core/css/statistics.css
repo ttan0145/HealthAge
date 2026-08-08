@@ -517,3 +517,45 @@
   border: 1px solid var(--gray-border);
 }
 .rm-stat--absent .rm-stat-value { font-size: 22px; color: var(--ink-soft); }
+
+/* Collapsed cause list: top few shown, the rest behind "View more".
+   Styled as a plain text link rather than a pill, so it reads as a quiet
+   control and does not compete with the ranked bars above it. */
+.stat-row--hidden { display: none; }
+
+.stat-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 18px;
+  padding: 0;
+  background: none;
+  border: 0;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  color: var(--green-text);
+  cursor: pointer;
+}
+
+.stat-more-label {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.stat-more:hover .stat-more-label { text-decoration-thickness: 2px; }
+
+.stat-more:focus-visible {
+  outline: 2px solid var(--green-strong);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+.stat-more-icon svg {
+  width: 15px;
+  height: 15px;
+  display: block;
+  transition: transform 0.15s ease;
+}
+
+.stat-more-icon--up svg { transform: rotate(180deg); }

@@ -90,7 +90,7 @@
       : "";
 
     return `
-      <div class="stat-rows">${renderRows(stats)}</div>
+      <div class="stat-rows" data-collapse>${renderRows(stats)}</div>
       ${other}
       <p class="stat-source">Source: ${escapeHtml(stats.source)}.
         Figures cover ${escapeHtml(stats.group_label)} and are national,
@@ -196,6 +196,9 @@
             Read more about ${escapeHtml(stats.top.cause.toLowerCase())}
           </a>
         </div>` : ""}`;
+
+      // Collapse to the top few now that the rows are in the document.
+      if (window.applyStatCollapse) window.applyStatCollapse(body);
     }).catch(() => {
       const body = backdrop.querySelector(".stat-modal-body");
       // If the statistics cannot be loaded, send the user to the full page
