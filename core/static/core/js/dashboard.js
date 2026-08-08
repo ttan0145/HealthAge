@@ -18,26 +18,11 @@ const SAMPLE_DATA = {
     subtitle: "Open a beginner exercise routine matched to your current top risk.",
     target: "/stayfit/?risk=heart-disease",
   },
-  other_risks: [
-    {
-      slug: "heart-disease",
-      name: "Heart disease",
-      level: "High",
-      description: "Leading cause of death for men in your age band. Rarely exercising and high work stress raise this further.",
-    },
-    {
-      slug: "stroke",
-      name: "Stroke",
-      level: "Moderate",
-      description: "A sudden loss of blood flow to the brain. High work stress is a contributing factor for you.",
-    },
-    {
-      slug: "type-2-diabetes",
-      name: "Type 2 diabetes",
-      level: "Baseline",
-      description: "Your eating pattern keeps this within the national baseline for your profile.",
-    },
-  ],
+  // other_risks used to be hardcoded here (heart disease / stroke / diabetes
+  // for every profile). It's gone: statistics.js fetches the ranked causes
+  // for the user's actual age and gender and fills #other-risks-panel with
+  // the top 3 once that request resolves, so a different age band shows a
+  // different set of cards.
 };
 
 const ICON_CHEVRON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
@@ -83,27 +68,6 @@ function renderActionCard(action) {
 }
 
 
-function renderOtherRisks(risks) {
-  const cards = risks
-    .map(
-      (risk) => `
-      <a class="risk-card" href="/readmore/?risk=${risk.slug}">
-        <div class="risk-card-top">
-          <span class="risk-card-name">${risk.name}</span>
-          <span class="risk-card-right">
-            <span class="badge badge--${risk.level}">${risk.level}</span>
-            <span class="icon icon--chevron">${ICON_CHEVRON}</span>
-          </span>
-        </div>
-        <p class="risk-card-desc">${risk.description}</p>
-      </a>
-    `
-    )
-    .join("");
-
-  return `<div class="risk-cards">${cards}</div>`;
-}
-
 function loadDashboard() {
   const data = SAMPLE_DATA;
 
@@ -114,12 +78,11 @@ function loadDashboard() {
     ${renderActionCard(data.next_action)}
   `;
 
-  document.getElementById("other-risks-panel").innerHTML = `
-    <div class="section-heading">
-      <h2>Other risks we checked</h2>
-    </div>
-    ${renderOtherRisks(data.other_risks)}
-  `;
+  // other-risks-panel is left alone here on purpose. dashboard.html already
+  // renders its loading skeleton, and statistics.js swaps in the real top-3
+  // cards once its fetch resolves. Re-rendering the skeleton on this timer
+  // used to race that: the fetch usually beats this 600ms delay, so the real
+  // cards would flash in and then get overwritten back to "loading" for good.
 }
 
 // Small delay so the "Matching your profile" state is visible,

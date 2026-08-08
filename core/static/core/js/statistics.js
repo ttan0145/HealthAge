@@ -84,6 +84,57 @@
     }).join("");
   }
 
+  // Same shape as dashboard.js's old renderOtherRisks, but built from the
+  // live ranked causes instead of a fixed heart-disease/stroke/diabetes list,
+  // so a different age or gender shows a different set of cards.
+  function renderRiskCards(causes, stats) {
+    return causes.map((cause) => {
+      const name = escapeHtml(cause.cause);
+      const level = escapeHtml(cause.level);
+      // No per-cause lifestyle blurb comes back from this endpoint (that
+      // copy lives in risk_engine.py, which isn't wired to the frontend),
+      // so fall back to the one number we do have for this cause.
+      const description = `${escapeHtml(cause.share_display)}% of deaths among ${escapeHtml(stats.group_label)}.`;
+
+      const body = `
+        <div class="risk-card-top">
+          <span class="risk-card-name">${name}</span>
+          <span class="risk-card-right">
+            <span class="badge badge--${level}">${level}</span>
+            <span class="icon icon--chevron">${ICON_CHEVRON}</span>
+          </span>
+        </div>
+        <p class="risk-card-desc">${description}</p>`;
+
+      if (!cause.slug) {
+        return `<div class="risk-card">${body}</div>`;
+      }
+
+      return `
+        <a class="risk-card" href="/readmore/?risk=${encodeURIComponent(cause.slug)}">
+          ${body}
+        </a>`;
+    }).join("");
+  }
+
+  // ---------------------------------------------------------------
+  // 3. "Other risks we checked" panel, ranks 1-3 from the same stats
+  // ---------------------------------------------------------------
+
+  function applyOtherRisks(stats) {
+    waitFor("#other-risks-panel", (panel) => {
+      const heading = `<div class="section-heading"><h2>Other risks we checked</h2></div>`;
+
+      if (!stats.available) {
+        panel.innerHTML = `${heading}<p class="stat-modal-loading">${escapeHtml(stats.headline)}</p>`;
+        return;
+      }
+
+      const top3 = stats.causes.slice(0, 3);
+      panel.innerHTML = `${heading}<div class="risk-cards">${renderRiskCards(top3, stats)}</div>`;
+    });
+  }
+
   function renderBreakdown(stats) {
     if (!stats.available) {
       return `<p class="stat-modal-loading">${escapeHtml(stats.headline)}</p>`;
@@ -145,6 +196,7 @@
     });
 
     applyStayFitAction(stats);
+    applyOtherRisks(stats);
   }
 
   function applyStayFitAction(stats) {
