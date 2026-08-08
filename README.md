@@ -131,12 +131,15 @@ Current Stay Fit status:
 
 - The page shows disease/risk focus buttons and consumes `/api/stayfit/routine/?risk=<risk_key>` instead of hardcoded exercise rows.
 - The current supported focus keys are `heart_disease`, `stroke`, `type_2_diabetes`, `respiratory_disease`, and `cancer`.
+- The routine API supports three intensity levels through `level=beginner`, `level=standard`, and `level=progress`, displayed as Low, Medium and High.
 - The Stay Fit focus choice is not saved to the database or session; it only travels as a request query parameter.
 - Exercise order rows select the active guidance exercise only; they do not open the detail modal.
 - Exercise details are displayed from the guidance panel modal using image/video fields when available and written instructions as fallback.
 - Swap calls `/api/stayfit/reshuffle/` with the current focus and replaces only one exercise row.
 - Timer logic is implemented in `stayfit.js`, not in the shared include script, and it does not auto-advance the exercise order.
 - The latest `main` mascot image has been integrated into the guidance panel.
+- The curated exercise pool contains 26 low-impact movements. Current Neon coverage is at least 10 movements per focus: Heart disease 20, Stroke 22, Type 2 diabetes 15, Respiratory disease 17, and Cancer 22.
+- The page prefers local exercise diagrams for known movements so the demo does not depend on incomplete third-party video coverage.
 
 ## Tests
 
@@ -184,6 +187,7 @@ Stay Fit exercise data currently supports two modes:
 
 - If a Neon/Postgres `exercise` table exists, `core/stayfit_api.py` reads the curated wger-sourced exercise pool from that table.
 - If the table is unavailable, the app uses the local curated fallback pool so the demo remains stable.
+- If Neon has only part of the exercise catalogue, matching database rows override local records and the local fallback pool fills missing movements.
 
 The prepared Neon SQL seed is available at `docs/sql/stayfit_exercise_seed.sql`. Review the shared database before running it.
 

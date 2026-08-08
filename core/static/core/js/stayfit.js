@@ -2,6 +2,7 @@ const stayfitState = {
   routine: null,
   exercises: [],
   selectedRisk: "heart_disease",
+  selectedLevel: "beginner",
   activeExerciseIndex: 0,
   carouselId: null,
   isGuidanceHovered: false,
@@ -12,22 +13,55 @@ const stayfitState = {
   isRunning: false,
 };
 
+const EXERCISE_VISUALS = {
+  step_jack: "Step out with arms rising, then return to centre.",
+  bird_dog: "Reach one arm and the opposite leg while keeping the core steady.",
+  wall_push_up: "Lean toward the wall, then press back to standing.",
+  side_plank_knee: "Hold a supported side plank from the knees.",
+  deep_breathing: "Breathe in slowly, then breathe out with control.",
+  torso_rotation: "Rotate gently from side to side while staying tall.",
+  seated_march: "March one knee at a time while seated upright.",
+  chair_squat: "Sit back to touch the chair, then stand tall.",
+  heel_raise: "Rise onto the balls of the feet, then lower slowly.",
+  shoulder_roll: "Roll the shoulders up, back and down.",
+  knee_extension: "Straighten one knee while seated, then switch sides.",
+  side_step: "Step side to side at a comfortable pace.",
+  walking: "Walk at a comfortable pace while keeping breathing steady.",
+  marching_high_knees: "Lift one knee at a time and use support if needed.",
+  diaphragmatic_breathing: "Let the belly rise as you breathe in, then exhale slowly.",
+  arm_neck_stretch: "Reach across gently and relax the neck before switching sides.",
+  back_neck_stretch: "Lower the chin lightly toward the chest without forcing.",
+  forward_shoulder_rotation: "Circle both shoulders forward with the neck relaxed.",
+  standing_calf_stretch: "Lean toward the wall and keep the back heel grounded.",
+  knee_to_chest_stretch: "Bring one knee toward the chest and hold gently.",
+  wall_angels: "Slide both arms on the wall in a slow, pain-free range.",
+  wall_slides: "Move the arms up and down the wall with control.",
+  hip_raise_lying: "Lift the hips slowly, pause, then lower with control.",
+  good_morning: "Hinge slightly from the hips, then return to standing.",
+  side_stretch: "Reach overhead and lean gently to the opposite side.",
+  shoulder_shrug: "Lift both shoulders, pause briefly, then lower slowly.",
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   bindTimerControls();
   bindModalControls();
   bindGuidanceCarouselControls();
   const params = new URLSearchParams(window.location.search);
-  loadRoutine(params.get("risk") || stayfitState.selectedRisk);
+  loadRoutine(
+    params.get("risk") || stayfitState.selectedRisk,
+    params.get("level") || stayfitState.selectedLevel
+  );
 });
 
-async function loadRoutine(riskKey = stayfitState.selectedRisk) {
+async function loadRoutine(riskKey = stayfitState.selectedRisk, levelKey = stayfitState.selectedLevel) {
   const list = document.getElementById("exercise-list");
-  const params = new URLSearchParams({ level: "beginner" });
+  const params = new URLSearchParams({ level: levelKey || "beginner" });
   if (riskKey) {
     params.set("risk", riskKey);
   }
 
   stayfitState.selectedRisk = riskKey || "heart_disease";
+  stayfitState.selectedLevel = levelKey || "beginner";
   list.classList.add("routine-list--loading");
   list.innerHTML = "<p>Loading exercises...</p>";
   stopExerciseCarousel();
@@ -60,11 +94,12 @@ function applyRoutine(routine) {
   stayfitState.routine = routine;
   stayfitState.exercises = routine.exercises || [];
   stayfitState.selectedRisk = routine.selected_risk?.key || stayfitState.selectedRisk;
+  stayfitState.selectedLevel = routine.level || stayfitState.selectedLevel;
   stayfitState.activeExerciseIndex = 0;
 
   document.getElementById("routine-title").textContent = routine.title;
   document.getElementById("routine-subtitle").textContent = routine.subtitle;
-  document.getElementById("routine-level").textContent = titleCase(routine.level);
+  document.getElementById("routine-level").textContent = routine.level_label || titleCase(routine.level);
   document.getElementById("guidance-title").textContent = routine.guidance_tip.title;
   document.getElementById("guidance-copy").textContent = routine.guidance_tip.text;
   document.getElementById("safety-note").textContent = routine.safety_note;
@@ -73,9 +108,10 @@ function applyRoutine(routine) {
   const seconds = Math.max(60, Number(routine.duration_minutes || 6) * 60);
   setTimerDuration(seconds);
   renderRiskOptions(routine.risk_options || [], stayfitState.selectedRisk);
+  renderIntensityOptions(routine.level_options || [], stayfitState.selectedLevel);
   renderExercises();
   showGuidanceExercise(0);
-  syncRiskUrl(stayfitState.selectedRisk);
+  syncRoutineUrl(stayfitState.selectedRisk, stayfitState.selectedLevel);
 }
 
 function renderRiskOptions(options, selectedKey) {
@@ -90,7 +126,34 @@ function renderRiskOptions(options, selectedKey) {
     button.setAttribute("aria-pressed", option.key === selectedKey ? "true" : "false");
     button.addEventListener("click", () => {
       if (option.key !== stayfitState.selectedRisk) {
-        loadRoutine(option.key);
+        loadRoutine(option.key, stayfitState.selectedLevel);
+      }
+    });
+
+    const label = document.createElement("strong");
+    label.textContent = option.label;
+
+    const description = document.createElement("span");
+    description.textContent = option.description;
+
+    button.append(label, description);
+    container.append(button);
+  });
+}
+
+function renderIntensityOptions(options, selectedKey) {
+  const container = document.getElementById("intensity-options");
+  if (!container) return;
+
+  container.innerHTML = "";
+  options.forEach((option) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `intensity-option${option.key === selectedKey ? " intensity-option--active" : ""}`;
+    button.setAttribute("aria-pressed", option.key === selectedKey ? "true" : "false");
+    button.addEventListener("click", () => {
+      if (option.key !== stayfitState.selectedLevel) {
+        loadRoutine(stayfitState.selectedRisk, option.key);
       }
     });
 
@@ -308,6 +371,10 @@ function renderExerciseMedia(container, exercise, options = {}) {
     return;
   }
 
+  if (renderExerciseIllustration(container, exercise)) {
+    return;
+  }
+
   if (exercise.image_url) {
     const image = document.createElement("img");
     image.src = exercise.image_url;
@@ -324,6 +391,50 @@ function renderExerciseMedia(container, exercise, options = {}) {
     placeholder.innerHTML = `<img src="/static/img/grandpa.png" alt="Friendly exercise mascot">`;
   }
   container.append(placeholder);
+}
+
+function renderExerciseIllustration(container, exercise) {
+  const cue = EXERCISE_VISUALS[exercise.id];
+  if (!cue) return false;
+
+  const figure = document.createElement("div");
+  figure.className = `exercise-visual exercise-visual--${toCssClass(exercise.id)}`;
+
+  const stage = document.createElement("div");
+  stage.className = "exercise-visual-stage";
+
+  const floor = document.createElement("span");
+  floor.className = "exercise-visual-floor";
+
+  const person = document.createElement("span");
+  person.className = "exercise-visual-person";
+  [
+    "head",
+    "torso",
+    "arm-left",
+    "arm-right",
+    "leg-left",
+    "leg-right",
+    "support",
+    "motion",
+  ].forEach((part) => {
+    const node = document.createElement("span");
+    node.className = `exercise-visual-${part}`;
+    person.append(node);
+  });
+
+  const cueText = document.createElement("p");
+  cueText.className = "exercise-visual-cue";
+  cueText.textContent = cue;
+
+  stage.append(floor, person);
+  figure.append(stage, cueText);
+  container.append(figure);
+  return true;
+}
+
+function toCssClass(value) {
+  return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "-");
 }
 
 function closeExerciseModal() {
@@ -485,9 +596,10 @@ function titleCase(value) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-function syncRiskUrl(riskKey) {
+function syncRoutineUrl(riskKey, levelKey) {
   if (!window.history?.replaceState || !riskKey) return;
   const url = new URL(window.location.href);
   url.searchParams.set("risk", riskKey);
+  if (levelKey) url.searchParams.set("level", levelKey);
   window.history.replaceState({}, "", `${url.pathname}?${url.searchParams.toString()}`);
 }

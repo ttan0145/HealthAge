@@ -7,7 +7,7 @@ from django.urls import reverse
 
 from .health_data_gateway import _database_is_configured, _row_cause_name
 from .risk_engine import build_risk_result
-from .stayfit_api import build_stayfit_routine, get_replacement_exercise
+from .stayfit_api import EXERCISE_POOL, RISK_ROUTINES, build_stayfit_routine, get_replacement_exercise
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -65,7 +65,7 @@ class HealthDataGatewayConfigurationTests(SimpleTestCase):
     def test_stayfit_routine_prefers_database_exercise_pool(self, database_pool):
         database_pool.return_value = [
             {
-                "id": "db_step",
+                "id": "step_jack",
                 "wger_id": 1,
                 "wger_uuid": None,
                 "name": "Database Step",
@@ -84,10 +84,10 @@ class HealthDataGatewayConfigurationTests(SimpleTestCase):
                 "plan_tags": ["cardio_core"],
             },
             {
-                "id": "db_breath",
+                "id": "wall_push_up",
                 "wger_id": 2,
                 "wger_uuid": None,
-                "name": "Database Breath",
+                "name": "Database Wall Press",
                 "category": "Chest",
                 "equipment": "none",
                 "muscles": ["Chest"],
@@ -106,8 +106,9 @@ class HealthDataGatewayConfigurationTests(SimpleTestCase):
 
         routine = build_stayfit_routine()
 
-        self.assertEqual(routine["exercises"][0]["id"], "db_step")
-        self.assertEqual(routine["exercises"][1]["name"], "Database Breath")
+        self.assertEqual(routine["exercises"][0]["id"], "step_jack")
+        self.assertEqual(routine["exercises"][0]["name"], "Database Step")
+        self.assertEqual(routine["exercises"][2]["name"], "Database Wall Press")
 
     @patch("core.stayfit_api._database_exercise_pool")
     def test_stayfit_reshuffle_falls_back_only_to_matching_plan_tag(self, database_pool):
@@ -156,13 +157,14 @@ class StaticAcceptanceTests(SimpleTestCase):
         nav_html = project_file("core/static/core/components/nav.html")
         include_js = project_file("core/static/core/js/include.js")
 
-        for label in ["My Plan", "Stay Fit", "Find Specialist", "Data Sources"]:
+        for label in ["My Plan", "Stay Fit", "Data Sources"]:
             self.assertIn(label, nav_html)
+        self.assertNotIn("Find Specialist", nav_html)
         self.assertIn('data-nav-section="plan"', nav_html)
-        self.assertIn('data-nav-section="specialist"', nav_html)
+        self.assertIn('data-nav-section="sources"', nav_html)
         self.assertIn('"/dashboard/"', include_js)
         self.assertIn('"/readmore/"', include_js)
-        self.assertIn('"#specialist"', include_js)
+        self.assertIn('if (path === "/source/") return "sources";', include_js)
 
     def test_stayfit_static_hooks_cover_timer_guideline_and_modal_video_loop(self):
         stayfit_html = project_file("core/templates/core/stayfit.html")
@@ -175,11 +177,14 @@ class StaticAcceptanceTests(SimpleTestCase):
             'id="timer-add-minute"',
             'id="guideline-note"',
             'id="exercise-modal-media"',
+            'id="intensity-options"',
         ]:
             self.assertIn(hook, stayfit_html)
         for video_flag in ["video.loop = true", "video.autoplay = true", "video.muted = true", "video.playsInline = true"]:
             self.assertIn(video_flag, stayfit_js)
         self.assertIn("renderGuidelineNote", stayfit_js)
+        self.assertIn("renderIntensityOptions", stayfit_js)
+        self.assertIn("renderExerciseIllustration", stayfit_js)
 
     def test_stayfit_exercise_order_is_user_directed_without_list_modal(self):
         stayfit_js = project_file("core/static/core/js/stayfit.js")
@@ -282,9 +287,12 @@ class HealthAgeFlowTests(TestCase):
         self.assertRedirects(lifestyle_response, reverse("dashboard"))
 
         dashboard_response = self.client.get(reverse("dashboard"))
-        self.assertContains(dashboard_response, "This is not a diagnosis.")
+        self.assertContains(dashboard_response, 'data-include="footer"')
         self.assertContains(dashboard_response, "What to do next")
         self.assertContains(dashboard_response, "Connected database", count=0)
+
+        footer_html = project_file("core/static/core/components/footer.html")
+        self.assertIn("This is not a diagnosis", footer_html)
 
     def test_readmore_page_is_public(self):
         response = self.client.get(reverse("readmore"))
@@ -315,13 +323,35 @@ class HealthAgeFlowTests(TestCase):
         self.assertEqual(data["persona"]["name"], "Mr Lim Wei Jian")
         self.assertEqual(data["selected_risk"]["key"], "heart_disease")
         self.assertEqual(data["title"], "Heart disease: low-impact cardio and core")
+        self.assertEqual(data["level_label"], "Low")
         self.assertEqual(len(data["exercises"]), 4)
         self.assertEqual(data["exercises"][0]["id"], "step_jack")
         self.assertEqual(len(data["risk_options"]), 5)
+        self.assertEqual(len(data["level_options"]), 3)
         self.assertEqual(data["guideline"]["name"], "Garis Panduan Aktiviti Fizikal Malaysia")
         self.assertIn("infosihat.moh.gov.my", data["guideline"]["url"])
         self.assertIn("guidance_tip", data)
         self.assertIn("wger", data["source"]["usage"])
+
+    def test_stayfit_routine_api_scales_intensity_levels(self):
+        low = self.client.get(
+            reverse("api_stayfit_routine"),
+            {"risk": "type_2_diabetes", "level": "beginner"},
+        ).json()
+        medium = self.client.get(
+            reverse("api_stayfit_routine"),
+            {"risk": "type_2_diabetes", "level": "standard"},
+        ).json()
+        high = self.client.get(
+            reverse("api_stayfit_routine"),
+            {"risk": "type_2_diabetes", "level": "progress"},
+        ).json()
+
+        self.assertEqual([low["level_label"], medium["level_label"], high["level_label"]], ["Low", "Medium", "High"])
+        self.assertLess(low["duration_minutes"], medium["duration_minutes"])
+        self.assertLess(medium["duration_minutes"], high["duration_minutes"])
+        self.assertLess(low["exercises"][0]["reps"], medium["exercises"][0]["reps"])
+        self.assertLess(medium["exercises"][0]["reps"], high["exercises"][0]["reps"])
 
     def test_stayfit_routine_api_keeps_four_exercises_for_every_focus(self):
         risks = [
@@ -341,6 +371,16 @@ class HealthAgeFlowTests(TestCase):
                 self.assertEqual(len(data["exercises"]), 4)
                 self.assertGreaterEqual(data["duration_minutes"], 1)
 
+    def test_stayfit_fallback_pool_has_at_least_ten_movements_per_focus(self):
+        for risk_key, routine in RISK_ROUTINES.items():
+            with self.subTest(risk=risk_key):
+                count = sum(
+                    1
+                    for exercise in EXERCISE_POOL
+                    if routine["plan_tag"] in exercise["plan_tags"]
+                )
+                self.assertGreaterEqual(count, 10)
+
     def test_stayfit_routine_api_returns_selected_risk_routine(self):
         response = self.client.get(reverse("api_stayfit_routine"), {"risk": "respiratory_disease"})
 
@@ -349,7 +389,7 @@ class HealthAgeFlowTests(TestCase):
         self.assertEqual(data["selected_risk"]["label"], "Respiratory disease")
         self.assertEqual(data["plan_tag"], "respiratory_disease")
         self.assertEqual(data["exercises"][0]["id"], "deep_breathing")
-        self.assertEqual(data["exercises"][1]["id"], "torso_rotation")
+        self.assertEqual(data["exercises"][1]["id"], "shoulder_roll")
 
     def test_stayfit_reshuffle_api_replaces_current_exercise(self):
         response = self.client.get(
@@ -362,6 +402,14 @@ class HealthAgeFlowTests(TestCase):
         self.assertNotEqual(exercise["id"], "deep_breathing")
         self.assertIn("respiratory_disease", exercise["plan_tags"])
         self.assertIn("instructions", exercise)
+
+    def test_stayfit_reshuffle_moves_forward_through_matching_pool(self):
+        first = get_replacement_exercise("deep_breathing", risk_key="respiratory_disease")
+        second = get_replacement_exercise(first["id"], risk_key="respiratory_disease")
+
+        self.assertNotEqual(first["id"], second["id"])
+        self.assertIn("respiratory_disease", first["plan_tags"])
+        self.assertIn("respiratory_disease", second["plan_tags"])
 
     def test_source_page_contains_specialist_anchor_for_navigation(self):
         response = self.client.get(reverse("source"))

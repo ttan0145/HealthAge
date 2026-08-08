@@ -31,9 +31,7 @@ function currentNavSection() {
   const path = location.pathname;
 
   if (path === "/stayfit/") return "stayfit";
-  if (path === "/source/") {
-    return location.hash === "#specialist" ? "specialist" : "sources";
-  }
+  if (path === "/source/") return "sources";
   if (["/dashboard/", "/readmore/", "/profile/", "/lifestyle/"].includes(path)) {
     return "plan";
   }

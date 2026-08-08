@@ -1142,7 +1142,8 @@ body {
   width: min(1520px, calc(100% - 48px));
 }
 
-.risk-picker {
+.risk-picker,
+.intensity-picker {
   display: grid;
   grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
   gap: 24px;
@@ -1153,28 +1154,39 @@ body {
   border-bottom: 1px solid var(--gray-border);
 }
 
+.intensity-picker {
+  margin-top: 0;
+  border-top: 0;
+}
+
 .risk-picker h2,
-.risk-picker p {
+.risk-picker p,
+.intensity-picker h2,
+.intensity-picker p {
   margin: 0;
 }
 
-.risk-picker h2 {
+.risk-picker h2,
+.intensity-picker h2 {
   font-size: 22px;
 }
 
-.risk-picker p {
+.risk-picker p,
+.intensity-picker p {
   margin-top: 6px;
   color: var(--gray-muted);
   line-height: 1.45;
 }
 
-.risk-options {
+.risk-options,
+.intensity-options {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
 }
 
-.risk-option {
+.risk-option,
+.intensity-option {
   flex: 1 1 180px;
   min-height: 76px;
   display: grid;
@@ -1191,22 +1203,26 @@ body {
   transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
 }
 
-.risk-option:hover {
+.risk-option:hover,
+.intensity-option:hover {
   border-color: rgba(31, 107, 72, 0.44);
   transform: translateY(-1px);
 }
 
-.risk-option--active {
+.risk-option--active,
+.intensity-option--active {
   border-color: var(--green-strong);
   background: var(--green-bg);
 }
 
-.risk-option strong {
+.risk-option strong,
+.intensity-option strong {
   font-size: 15px;
   line-height: 1.2;
 }
 
-.risk-option span {
+.risk-option span,
+.intensity-option span {
   color: var(--gray-muted);
   font-size: 13px;
   line-height: 1.25;
@@ -1517,6 +1533,282 @@ body {
   font-size: 13px;
 }
 
+.exercise-visual {
+  width: 100%;
+  min-height: 214px;
+  display: grid;
+  grid-template-rows: minmax(150px, 1fr) auto;
+  gap: 10px;
+  align-items: end;
+  padding: 18px;
+  border-radius: var(--radius-md);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(221, 242, 235, 0.52)),
+    radial-gradient(circle at 78% 18%, rgba(31, 107, 72, 0.16), transparent 28%);
+}
+
+.exercise-visual-stage {
+  position: relative;
+  width: min(260px, 100%);
+  height: 156px;
+  margin: 0 auto;
+}
+
+.exercise-visual-floor {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: 18px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(6, 79, 59, 0.18);
+}
+
+.exercise-visual-person,
+.exercise-visual-person span {
+  position: absolute;
+  display: block;
+}
+
+.exercise-visual-person {
+  left: 50%;
+  top: 18px;
+  width: 108px;
+  height: 128px;
+  transform: translateX(-50%);
+}
+
+.exercise-visual-head {
+  left: 41px;
+  top: 0;
+  width: 26px;
+  height: 26px;
+  border: 4px solid var(--green-text);
+  border-radius: 50%;
+  background: #f6fbf8;
+}
+
+.exercise-visual-torso {
+  left: 48px;
+  top: 30px;
+  width: 12px;
+  height: 48px;
+  border-radius: 999px;
+  background: var(--green-text);
+  transform-origin: top center;
+}
+
+.exercise-visual-arm-left,
+.exercise-visual-arm-right,
+.exercise-visual-leg-left,
+.exercise-visual-leg-right {
+  width: 10px;
+  border-radius: 999px;
+  background: var(--green-strong);
+  transform-origin: top center;
+}
+
+.exercise-visual-arm-left,
+.exercise-visual-arm-right {
+  top: 36px;
+  height: 46px;
+}
+
+.exercise-visual-arm-left { left: 48px; transform: rotate(44deg); }
+.exercise-visual-arm-right { left: 51px; transform: rotate(-44deg); }
+.exercise-visual-leg-left,
+.exercise-visual-leg-right {
+  top: 74px;
+  height: 54px;
+}
+
+.exercise-visual-leg-left { left: 50px; transform: rotate(18deg); }
+.exercise-visual-leg-right { left: 49px; transform: rotate(-18deg); }
+
+.exercise-visual-support {
+  display: none !important;
+}
+
+.exercise-visual-motion {
+  right: 8px;
+  top: 24px;
+  width: 46px;
+  height: 46px;
+  border: 2px solid rgba(31, 107, 72, 0.3);
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+}
+
+.exercise-visual-cue {
+  margin: 0;
+  color: var(--green-text);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.exercise-visual--wall-push-up .exercise-visual-person {
+  transform: translateX(-50%) rotate(-18deg);
+}
+
+.exercise-visual--wall-push-up .exercise-visual-support,
+.exercise-visual--standing-calf-stretch .exercise-visual-support,
+.exercise-visual--wall-angels .exercise-visual-support,
+.exercise-visual--wall-slides .exercise-visual-support,
+.exercise-visual--chair-squat .exercise-visual-support,
+.exercise-visual--seated-march .exercise-visual-support,
+.exercise-visual--knee-extension .exercise-visual-support {
+  display: block !important;
+  right: 26px;
+  bottom: 18px;
+  width: 46px;
+  height: 46px;
+  border: 3px solid rgba(6, 79, 59, 0.32);
+  border-top-width: 8px;
+  border-radius: 5px 5px 3px 3px;
+}
+
+.exercise-visual--bird-dog .exercise-visual-person,
+.exercise-visual--side-plank-knee .exercise-visual-person {
+  top: 58px;
+  transform: translateX(-50%) rotate(88deg);
+}
+
+.exercise-visual--bird-dog .exercise-visual-arm-left {
+  transform: rotate(104deg);
+}
+
+.exercise-visual--bird-dog .exercise-visual-leg-right {
+  transform: rotate(-104deg);
+}
+
+.exercise-visual--side-plank-knee .exercise-visual-leg-left,
+.exercise-visual--side-plank-knee .exercise-visual-leg-right {
+  height: 36px;
+}
+
+.exercise-visual--deep-breathing .exercise-visual-arm-left,
+.exercise-visual--diaphragmatic-breathing .exercise-visual-arm-left {
+  transform: rotate(74deg);
+}
+
+.exercise-visual--deep-breathing .exercise-visual-arm-right,
+.exercise-visual--diaphragmatic-breathing .exercise-visual-arm-right {
+  transform: rotate(-74deg);
+}
+
+.exercise-visual--torso-rotation .exercise-visual-torso,
+.exercise-visual--side-stretch .exercise-visual-torso {
+  transform: rotate(12deg);
+}
+
+.exercise-visual--torso-rotation .exercise-visual-motion,
+.exercise-visual--shoulder-roll .exercise-visual-motion,
+.exercise-visual--forward-shoulder-rotation .exercise-visual-motion,
+.exercise-visual--shoulder-shrug .exercise-visual-motion {
+  right: 50%;
+  top: 18px;
+  transform: translateX(78px);
+}
+
+.exercise-visual--seated-march .exercise-visual-person,
+.exercise-visual--knee-extension .exercise-visual-person {
+  top: 32px;
+}
+
+.exercise-visual--seated-march .exercise-visual-leg-left {
+  height: 42px;
+  transform: rotate(64deg);
+}
+
+.exercise-visual--chair-squat .exercise-visual-person {
+  top: 34px;
+}
+
+.exercise-visual--chair-squat .exercise-visual-torso {
+  transform: rotate(-8deg);
+}
+
+.exercise-visual--heel-raise .exercise-visual-person {
+  top: 8px;
+}
+
+.exercise-visual--heel-raise .exercise-visual-floor {
+  bottom: 10px;
+}
+
+.exercise-visual--shoulder-roll .exercise-visual-arm-left,
+.exercise-visual--forward-shoulder-rotation .exercise-visual-arm-left,
+.exercise-visual--shoulder-shrug .exercise-visual-arm-left {
+  transform: rotate(68deg);
+}
+
+.exercise-visual--shoulder-roll .exercise-visual-arm-right,
+.exercise-visual--forward-shoulder-rotation .exercise-visual-arm-right,
+.exercise-visual--shoulder-shrug .exercise-visual-arm-right {
+  transform: rotate(-68deg);
+}
+
+.exercise-visual--knee-extension .exercise-visual-leg-right {
+  transform: rotate(-78deg);
+}
+
+.exercise-visual--side-step .exercise-visual-leg-left {
+  transform: rotate(38deg);
+}
+
+.exercise-visual--side-step .exercise-visual-leg-right {
+  transform: rotate(-38deg);
+}
+
+.exercise-visual--walking .exercise-visual-leg-left,
+.exercise-visual--marching-high-knees .exercise-visual-leg-left {
+  height: 42px;
+  transform: rotate(60deg);
+}
+
+.exercise-visual--standing-calf-stretch .exercise-visual-person,
+.exercise-visual--wall-slides .exercise-visual-person {
+  transform: translateX(-50%) rotate(-6deg);
+}
+
+.exercise-visual--wall-angels .exercise-visual-arm-left,
+.exercise-visual--wall-slides .exercise-visual-arm-left,
+.exercise-visual--side-stretch .exercise-visual-arm-left {
+  transform: rotate(108deg);
+}
+
+.exercise-visual--wall-angels .exercise-visual-arm-right,
+.exercise-visual--wall-slides .exercise-visual-arm-right,
+.exercise-visual--side-stretch .exercise-visual-arm-right {
+  transform: rotate(-108deg);
+}
+
+.exercise-visual--arm-neck-stretch .exercise-visual-head,
+.exercise-visual--back-neck-stretch .exercise-visual-head {
+  transform: rotate(10deg);
+}
+
+.exercise-visual--knee-to-chest-stretch .exercise-visual-person,
+.exercise-visual--hip-raise-lying .exercise-visual-person {
+  top: 62px;
+  transform: translateX(-50%) rotate(86deg);
+}
+
+.exercise-visual--knee-to-chest-stretch .exercise-visual-leg-left {
+  transform: rotate(86deg);
+}
+
+.exercise-visual--hip-raise-lying .exercise-visual-torso {
+  transform: rotate(-10deg);
+}
+
+.exercise-visual--good-morning .exercise-visual-torso {
+  transform: rotate(-20deg);
+}
+
 .guidance-media--mascot {
   background: transparent;
   border-radius: 0;
@@ -1761,11 +2053,13 @@ body {
     grid-column: auto;
   }
 
-  .risk-picker {
+  .risk-picker,
+  .intensity-picker {
     grid-template-columns: 1fr;
   }
 
-  .risk-option {
+  .risk-option,
+  .intensity-option {
     flex-basis: 150px;
   }
 
