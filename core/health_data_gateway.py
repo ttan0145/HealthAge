@@ -67,8 +67,10 @@ def fetch_mortality_match(age: int, sex: str, location: str) -> MortalityMatch |
 
     cause_lookup = _load_cause_lookup(tables)
     columns = set(mortality_rows[0].keys())
-    cause_col = _first_matching_column(columns, ["cause_name", "cause", "cause_of_death", "death_cause", "condition", "disease"])
     cause_id_col = _first_matching_column(columns, ["cause_id"])
+    cause_col = _first_matching_column(columns, ["cause_name", "cause", "cause_of_death", "death_cause", "condition", "disease"])
+    if cause_col == cause_id_col:
+        cause_col = None
     mortality_id_col = _first_matching_column(columns, ["mortality_id", "id"])
     location_col = _first_matching_column(columns, ["location", "state"])
     sex_col = _first_matching_column(columns, ["sex", "gender"])
