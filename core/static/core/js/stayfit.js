@@ -2,6 +2,8 @@ const stayfitState = {
   routine: null,
   exercises: [],
   selectedRisk: "heart_disease",
+  activeExerciseIndex: 0,
+  carouselId: null,
   remainingSeconds: 360,
   totalSeconds: 360,
   timerId: null,
@@ -25,6 +27,8 @@ async function loadRoutine(riskKey = stayfitState.selectedRisk) {
   stayfitState.selectedRisk = riskKey || "heart_disease";
   list.classList.add("routine-list--loading");
   list.innerHTML = "<p>Loading exercises...</p>";
+  stopExerciseCarousel();
+  renderGuidanceLoading();
 
   try {
     const response = await fetch(`/api/stayfit/routine/?${params.toString()}`, {
@@ -45,6 +49,7 @@ async function loadRoutine(riskKey = stayfitState.selectedRisk) {
         <span>Please refresh the page or try again later.</span>
       </div>
     `;
+    renderGuidanceLoading("Exercise demonstration unavailable.");
   }
 }
 
@@ -52,6 +57,7 @@ function applyRoutine(routine) {
   stayfitState.routine = routine;
   stayfitState.exercises = routine.exercises || [];
   stayfitState.selectedRisk = routine.selected_risk?.key || stayfitState.selectedRisk;
+  stayfitState.activeExerciseIndex = 0;
 
   document.getElementById("routine-title").textContent = routine.title;
   document.getElementById("routine-subtitle").textContent = routine.subtitle;
@@ -65,6 +71,8 @@ function applyRoutine(routine) {
   setTimerDuration(seconds);
   renderRiskOptions(routine.risk_options || [], stayfitState.selectedRisk);
   renderExercises();
+  showGuidanceExercise(0);
+  startExerciseCarousel();
   syncRiskUrl(stayfitState.selectedRisk);
 }
 
@@ -102,12 +110,16 @@ function renderExercises() {
 
   stayfitState.exercises.forEach((exercise, index) => {
     const row = document.createElement("article");
-    row.className = "exercise-row exercise-row--interactive";
+    row.className = `exercise-row exercise-row--interactive${index === stayfitState.activeExerciseIndex ? " exercise-row--active" : ""}`;
 
     const detailButton = document.createElement("button");
     detailButton.type = "button";
     detailButton.className = "exercise-main";
-    detailButton.addEventListener("click", () => openExerciseModal(exercise));
+    detailButton.addEventListener("click", () => {
+      showGuidanceExercise(index);
+      startExerciseCarousel();
+      openExerciseModal(exercise);
+    });
 
     const badge = document.createElement("span");
     badge.className = "exercise-index";
@@ -159,14 +171,46 @@ async function reshuffleExercise(index, button) {
 
     const data = await response.json();
     stayfitState.exercises[index] = data.exercise;
+    stayfitState.activeExerciseIndex = index;
     renderExercises();
+    showGuidanceExercise(index);
+    startExerciseCarousel();
   } catch (error) {
     button.disabled = false;
     button.textContent = "Try again";
   }
 }
 
+function showGuidanceExercise(index) {
+  if (!stayfitState.exercises.length) return;
+  const safeIndex = ((index % stayfitState.exercises.length) + stayfitState.exercises.length) % stayfitState.exercises.length;
+  stayfitState.activeExerciseIndex = safeIndex;
+  renderGuidanceExercise(stayfitState.exercises[safeIndex]);
+  updateActiveExerciseRow();
+}
+
+function startExerciseCarousel() {
+  stopExerciseCarousel();
+  if (stayfitState.exercises.length < 2) return;
+  stayfitState.carouselId = window.setInterval(() => {
+    showGuidanceExercise(stayfitState.activeExerciseIndex + 1);
+  }, 2000);
+}
+
+function stopExerciseCarousel() {
+  if (!stayfitState.carouselId) return;
+  window.clearInterval(stayfitState.carouselId);
+  stayfitState.carouselId = null;
+}
+
+function updateActiveExerciseRow() {
+  document.querySelectorAll(".exercise-row").forEach((row, index) => {
+    row.classList.toggle("exercise-row--active", index === stayfitState.activeExerciseIndex);
+  });
+}
+
 function openExerciseModal(exercise) {
+  stopExerciseCarousel();
   const modal = document.getElementById("exercise-modal");
   const media = document.getElementById("exercise-modal-media");
   const meta = document.getElementById("exercise-modal-meta");
@@ -176,27 +220,7 @@ function openExerciseModal(exercise) {
   document.getElementById("exercise-modal-instructions").textContent = exercise.instructions;
   document.getElementById("exercise-modal-source").textContent = exercise.source_note;
 
-  media.innerHTML = "";
-  if (exercise.video_url) {
-    const video = document.createElement("video");
-    video.controls = true;
-    video.loop = true;
-    video.autoplay = true;
-    video.muted = true;
-    video.playsInline = true;
-    video.src = exercise.video_url;
-    media.append(video);
-  } else if (exercise.image_url) {
-    const image = document.createElement("img");
-    image.src = exercise.image_url;
-    image.alt = `${exercise.name} demonstration`;
-    media.append(image);
-  } else {
-    const placeholder = document.createElement("p");
-    placeholder.className = "exercise-modal-placeholder";
-    placeholder.textContent = "No image or video is available for this exercise, so use the written instructions below.";
-    media.append(placeholder);
-  }
+  renderExerciseMedia(media, exercise, { controls: true });
 
   meta.innerHTML = "";
   addMetaRow(meta, "Dose", formatExerciseDose(exercise));
@@ -207,9 +231,70 @@ function openExerciseModal(exercise) {
   document.body.classList.add("modal-open");
 }
 
+function renderGuidanceExercise(exercise) {
+  const media = document.getElementById("guidance-media");
+  if (!media || !exercise) return;
+
+  renderExerciseMedia(media, exercise, { controls: false, mascotFallback: true });
+  document.getElementById("guidance-demo-category").textContent = exercise.category || "Exercise demonstration";
+  document.getElementById("guidance-demo-position").textContent = `${stayfitState.activeExerciseIndex + 1} / ${stayfitState.exercises.length}`;
+  document.getElementById("guidance-demo-title").textContent = exercise.name || "Exercise";
+  document.getElementById("guidance-demo-dose").textContent = formatExerciseDose(exercise);
+  document.getElementById("guidance-demo-instructions").textContent = exercise.instructions || "Use the written instructions for this exercise.";
+  document.getElementById("guidance-demo-source").textContent = exercise.source_note || "";
+}
+
+function renderGuidanceLoading(message = "Loading exercise demonstration...") {
+  const media = document.getElementById("guidance-media");
+  if (!media) return;
+  media.innerHTML = `<p class="exercise-modal-placeholder">${message}</p>`;
+  document.getElementById("guidance-demo-category").textContent = "Exercise demonstration";
+  document.getElementById("guidance-demo-position").textContent = "";
+  document.getElementById("guidance-demo-title").textContent = "Loading exercise...";
+  document.getElementById("guidance-demo-dose").textContent = "";
+  document.getElementById("guidance-demo-instructions").textContent = "";
+  document.getElementById("guidance-demo-source").textContent = "";
+}
+
+function renderExerciseMedia(container, exercise, options = {}) {
+  container.innerHTML = "";
+  container.classList.remove("guidance-media--mascot");
+
+  if (exercise.video_url) {
+    const video = document.createElement("video");
+    video.controls = Boolean(options.controls);
+    video.loop = true;
+    video.autoplay = true;
+    video.muted = true;
+    video.playsInline = true;
+    video.src = exercise.video_url;
+    container.append(video);
+    video.play?.().catch(() => {});
+    return;
+  }
+
+  if (exercise.image_url) {
+    const image = document.createElement("img");
+    image.src = exercise.image_url;
+    image.alt = `${exercise.name} demonstration`;
+    container.append(image);
+    return;
+  }
+
+  const placeholder = document.createElement("p");
+  placeholder.className = options.mascotFallback ? "guidance-mascot-fallback" : "exercise-modal-placeholder";
+  placeholder.textContent = "No image or video is available for this exercise, so use the written instructions below.";
+  if (options.mascotFallback) {
+    container.classList.add("guidance-media--mascot");
+    placeholder.innerHTML = `<img src="/static/img/grandpa.png" alt="Friendly exercise mascot">`;
+  }
+  container.append(placeholder);
+}
+
 function closeExerciseModal() {
   document.getElementById("exercise-modal").hidden = true;
   document.body.classList.remove("modal-open");
+  startExerciseCarousel();
 }
 
 function bindModalControls() {
