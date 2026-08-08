@@ -559,3 +559,13 @@
 }
 
 .stat-more-icon--up svg { transform: rotate(180deg); }
+
+/* Says what was filtered out of the ranked list, so a shortened list is
+   never presented as the complete published picture. */
+.stat-excluded {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--gray-muted);
+  max-width: 62ch;
+}

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{ risk.name }} &mdash; Health Age</title>
 <link rel="stylesheet" href="/static/core/css/style.css">
-<link rel="stylesheet" href="/static/core/css/statistics.css?v=20260808a">
+<link rel="stylesheet" href="/static/core/css/statistics.css?v=20260808b">
 </head>
 <body class="lp-body">
 
@@ -74,6 +74,9 @@
 
       {% if stats.other_share %}
       <p class="stat-other">All other causes make up the remaining {{ stats.other_share }}%.</p>
+      {% endif %}
+      {% if stats.exclusion_note %}
+      <p class="stat-excluded">{{ stats.exclusion_note }}</p>
       {% endif %}
       {% if stats.available %}
       <p class="stat-source">
@@ -158,8 +161,9 @@
             <span class="badge badge--{{ other.level }}">{{ other.share_display }}%</span>
           </span>
           <span class="rm-other-desc">
-            {{ other.rank_display }} of ten for {{ stats.group_label }},
-            {{ other.death_count_display }} deaths in {{ stats.year }}.
+            {{ other.rank_display }} of {{ stats.causes|length }} for
+            {{ stats.group_label }}, {{ other.death_count_display }} deaths
+            in {{ stats.year }}.
           </span>
         </a>
         {% endfor %}
@@ -170,15 +174,16 @@
       <div class="section-heading"><h2>Where this comes from</h2></div>
       <p class="rm-body">
         The figures on this page come from {{ stats.source }}, published by the
-        Department of Statistics Malaysia. They are the ten leading causes of
-        death for {{ stats.group_label }}, matched to the age band and sex you
+        Department of Statistics Malaysia, matched to the age band and sex you
         gave us.
       </p>
       <p class="rm-body">
-        Two limits worth knowing. The workbook publishes causes by age band and
-        sex at national level only, so your state does not change the result.
-        And it counts medically certified deaths, which is the more reliable
-        record but not every death in the country.
+        Three limits worth knowing. The workbook publishes causes by age band
+        and sex at national level only, so your state does not change the
+        result. It counts medically certified deaths, which is the more
+        reliable record but not every death in the country.
+        {% if stats.exclusion_note %}And the published table also lists causes
+        that are not health conditions; {{ stats.exclusion_note|lower }}{% endif %}
       </p>
       <a href="/source/" class="rm-link-pill">See all data sources</a>
 
@@ -195,6 +200,6 @@
 
   <div data-include="footer"></div>
   <script src="/static/core/js/include.js"></script>
-  <script src="/static/core/js/stat-collapse.js?v=20260808a"></script>
+  <script src="/static/core/js/stat-collapse.js?v=20260808b"></script>
 </body>
 </html>

@@ -94,9 +94,14 @@
            ${stats.other_share}%.</p>`
       : "";
 
+    const excluded = stats.exclusion_note
+      ? `<p class="stat-excluded">${escapeHtml(stats.exclusion_note)}</p>`
+      : "";
+
     return `
       <div class="stat-rows" data-collapse>${renderRows(stats)}</div>
       ${other}
+      ${excluded}
       <p class="stat-source">Source: ${escapeHtml(stats.source)}.
         Figures cover ${escapeHtml(stats.group_label)} and are national,
         not state level.</p>`;

@@ -80,6 +80,22 @@ SLUG_TO_CAUSE = {slug: name for name, slug in CAUSE_SLUGS.items()}
 
 ORDINALS = {1: "1st", 2: "2nd", 3: "3rd"}
 
+# Causes the tool does not report on.
+#
+# The workbook's top ten mixes disease with external causes. Transport
+# accidents lead the published list for men aged 15 to 40 at 25%, which would
+# make road safety the headline of a tool built around non-communicable
+# disease. It is left out so the result stays on conditions the rest of the
+# app can actually act on, and the exclusion is stated on screen rather than
+# hidden. Its deaths still count toward the "all other causes" remainder, so
+# no percentage is inflated by removing it.
+EXCLUDED_CAUSES = {"Transport accidents"}
+
+EXCLUSION_NOTE = (
+    "Road traffic deaths are published in the same table but excluded here, "
+    "because this tool covers health conditions rather than injury."
+)
+
 # Badge thresholds, by share of all deaths in the group. Drives the existing
 # badge--High / --Moderate / --Baseline styles.
 HIGH_SHARE = 15.0
@@ -200,7 +216,13 @@ def get_statistics(age=DEFAULT_AGE, gender=DEFAULT_GENDER,
 
     gender = normalise_gender(gender)
     band = band_for_age(age)
-    rows = _fetch_rows(band, gender.lower(), year, location)
+    published = _fetch_rows(band, gender.lower(), year, location)
+
+    # Drop the causes this tool does not report on, then renumber so the list
+    # reads 1, 2, 3. The workbook's own position is kept as published_rank so
+    # the original ranking is never lost.
+    rows = [r for r in published if r.cause.cause_name not in EXCLUDED_CAUSES]
+    excluded = [r for r in published if r.cause.cause_name in EXCLUDED_CAUSES]
 
     causes = [
         {
@@ -209,16 +231,18 @@ def get_statistics(age=DEFAULT_AGE, gender=DEFAULT_GENDER,
             "share": row.share_pct,
             "share_display": format_share(row.share_pct),
             "level": level_for(row.share_pct),
-            "rank": row.rank,
-            "rank_display": ordinal(row.rank),
+            "rank": position,
+            "rank_display": ordinal(position),
+            "published_rank": row.rank,
             "slug": CAUSE_SLUGS.get(row.cause.cause_name),
             "death_count": row.death_count,
             "death_count_display": f"{row.death_count:,}",
         }
-        for row in rows
+        for position, row in enumerate(rows, start=1)
     ]
 
-    # Whatever the published top ten does not account for.
+    # Everything the shown list does not account for. Excluded causes fall in
+    # here rather than vanishing, so the percentages still add up.
     other_share = None
     if rows:
         counted = sum(row.death_count for row in rows)
@@ -237,17 +261,34 @@ def get_statistics(age=DEFAULT_AGE, gender=DEFAULT_GENDER,
         "available": bool(causes),
         "other_share": other_share,
         "top": top,
-        "headline": headline_for(top, gender, band) if causes else UNAVAILABLE,
+        "headline": headline_for(top, gender, band, excluded) if causes
+                    else UNAVAILABLE,
         "subtitle": subtitle_for(
             causes, rows[0].group_total if rows else None, year),
         "source": SOURCE,
         "year": year,
         "group_total": rows[0].group_total if rows else None,
+        # What was left out, so the page can say so instead of quietly
+        # presenting a filtered list as the full picture.
+        "excluded": [
+            {
+                "cause": DISPLAY_NAMES.get(r.cause.cause_name, r.cause.cause_name),
+                "published_rank": r.rank,
+                "share_display": format_share(r.share_pct),
+            }
+            for r in excluded
+        ],
+        "exclusion_note": EXCLUSION_NOTE if excluded else "",
     }
 
 
-def headline_for(top, gender, band):
-    """The one sentence that replaces the note on the dashboard card."""
+def headline_for(top, gender, band, excluded=()):
+    """The one sentence that replaces the note on the dashboard card.
+
+    Says "health condition" rather than "cause of death" when something has
+    been filtered out, because the top of the published table is not
+    necessarily the top of the list being shown.
+    """
     if not top:
         return ""
     # The cause goes after the verb so singular and plural names both read
@@ -255,8 +296,9 @@ def headline_for(top, gender, band):
     # with the subject would need "is" for one and "are" for the other.
     cause = top["cause"]
     cause = cause[0].lower() + cause[1:] if cause else cause
+    subject = ("The health condition causing the most deaths among"
+               if excluded else "The leading cause of death among")
     return (
-        f"The leading cause of death among {band_label(gender, band)} in "
-        f"Malaysia is {cause}, at {top['share_display']}% of all deaths in "
-        f"that group."
+        f"{subject} {band_label(gender, band)} in Malaysia is {cause}, at "
+        f"{top['share_display']}% of all deaths in that group."
     )
