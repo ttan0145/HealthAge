@@ -59,7 +59,7 @@ function applyRoutine(routine) {
   document.getElementById("guidance-title").textContent = routine.guidance_tip.title;
   document.getElementById("guidance-copy").textContent = routine.guidance_tip.text;
   document.getElementById("safety-note").textContent = routine.safety_note;
-  document.getElementById("guideline-note").textContent = `${routine.guideline_note} Source: ${routine.source.name}.`;
+  renderGuidelineNote(routine);
 
   const seconds = Math.max(60, Number(routine.duration_minutes || 6) * 60);
   setTimerDuration(seconds);
@@ -180,6 +180,10 @@ function openExerciseModal(exercise) {
   if (exercise.video_url) {
     const video = document.createElement("video");
     video.controls = true;
+    video.loop = true;
+    video.autoplay = true;
+    video.muted = true;
+    video.playsInline = true;
     video.src = exercise.video_url;
     media.append(video);
   } else if (exercise.image_url) {
@@ -228,6 +232,30 @@ function addMetaRow(meta, label, value) {
   description.textContent = value || "Not specified";
 
   meta.append(term, description);
+}
+
+function renderGuidelineNote(routine) {
+  const note = document.getElementById("guideline-note");
+  note.innerHTML = "";
+
+  const guideline = routine.guideline || {};
+  const source = routine.source || {};
+  const guidelineName = guideline.name || "Saranan Aktiviti Fizikal Malaysia";
+
+  note.append("Exercise recommendations align with ");
+
+  if (guideline.url) {
+    const guidelineLink = document.createElement("a");
+    guidelineLink.href = guideline.url;
+    guidelineLink.target = "_blank";
+    guidelineLink.rel = "noopener noreferrer";
+    guidelineLink.textContent = guidelineName;
+    note.append(guidelineLink);
+  } else {
+    note.append(guidelineName);
+  }
+
+  note.append(` and support SDG3 Good Health and Well-Being. Source: ${source.name || "wger.de Exercise Database"}.`);
 }
 
 function bindTimerControls() {

@@ -18,12 +18,28 @@ async function loadIncludes() {
 }
 
 function markActiveNavLink() {
+  const activeSection = currentNavSection();
   document.querySelectorAll(".lp-topnav-item[href]").forEach((link) => {
-    const linkPath = new URL(link.getAttribute("href"), location.origin).pathname;
-    if (linkPath === location.pathname) {
+    link.classList.remove("lp-topnav-item--active");
+    if (link.dataset.navSection === activeSection) {
       link.classList.add("lp-topnav-item--active");
     }
   });
 }
 
+function currentNavSection() {
+  const path = location.pathname;
+
+  if (path === "/stayfit/") return "stayfit";
+  if (path === "/source/") {
+    return location.hash === "#specialist" ? "specialist" : "sources";
+  }
+  if (["/dashboard/", "/readmore/", "/profile/", "/lifestyle/"].includes(path)) {
+    return "plan";
+  }
+
+  return "";
+}
+
 document.addEventListener("DOMContentLoaded", loadIncludes);
+window.addEventListener("hashchange", markActiveNavLink);

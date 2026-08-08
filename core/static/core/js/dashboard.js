@@ -13,10 +13,10 @@ const SAMPLE_DATA = {
     note: "Selangor figures are not published for this year, so this uses the national figure for men aged 41 to 59.",
   },
   next_action: {
-    type: "screening",
-    title: "Book a screening",
-    subtitle: "3 government clinics within 5 km. Screening is free under PeKaB40 if you qualify. This is the one thing worth doing first.",
-    target: "/source/#peka",
+    type: "routine",
+    title: "Start a Stay Fit routine",
+    subtitle: "Open a beginner exercise routine matched to your current top risk.",
+    target: "/stayfit/?risk=heart-disease",
   },
   other_risks: [
     {

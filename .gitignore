@@ -3,4 +3,5 @@ __pycache__/
 .env
 .env.local
 *.pyc
+db.sqlite3
 test.sqlite3

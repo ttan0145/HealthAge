@@ -183,7 +183,11 @@ def api_stayfit_reshuffle(request):
     current_id = request.GET.get("current")
     plan_tag = request.GET.get("plan", "cardio_core").strip().lower() or "cardio_core"
     risk_key = request.GET.get("risk")
-    return JsonResponse({"exercise": get_replacement_exercise(current_id, plan_tag=plan_tag, risk_key=risk_key)})
+    try:
+        exercise = get_replacement_exercise(current_id, plan_tag=plan_tag, risk_key=risk_key)
+    except ValueError as error:
+        return JsonResponse({"error": str(error)}, status=404)
+    return JsonResponse({"exercise": exercise})
 
 
 def _store_statistics_profile(request, age, sex, state):

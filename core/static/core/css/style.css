@@ -1537,6 +1537,12 @@ body {
   line-height: 1.5;
 }
 
+.stayfit-source-note a {
+  color: var(--green-text);
+  font-weight: 700;
+  text-underline-offset: 3px;
+}
+
 .exercise-modal[hidden] {
   display: none;
 }

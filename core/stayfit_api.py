@@ -323,6 +323,10 @@ def build_stayfit_routine(level: str = "beginner", risk_key: str | None = None) 
             "Exercise recommendations align with Saranan Aktiviti Fizikal Malaysia "
             "and support SDG3 Good Health and Well-Being."
         ),
+        "guideline": {
+            "name": "Garis Panduan Aktiviti Fizikal Malaysia",
+            "url": "https://infosihat.moh.gov.my/multimedia/garis-panduan/item/garis-panduan-aktiviti-fizikal-malaysia-2.html",
+        },
         "source": {
             "name": "wger.de Exercise Database",
             "licence": "CC-BY-SA / open exercise data",
@@ -348,18 +352,23 @@ def get_replacement_exercise(
     if preferred_tag == "cardio_core" and selected_key != DEFAULT_RISK_KEY:
         preferred_tag = RISK_ROUTINES[selected_key]["plan_tag"]
     exercise_pool = _load_exercise_pool()
+    candidates = _replacement_candidates(exercise_pool, current_id, preferred_tag)
 
-    for exercise in exercise_pool:
-        if exercise["id"] == current_id:
-            continue
-        if preferred_tag in exercise["plan_tags"] and exercise["id"] not in routine_ids:
+    if not candidates:
+        candidates = _replacement_candidates(deepcopy(EXERCISE_POOL), current_id, preferred_tag)
+
+    for exercise in candidates:
+        if exercise["id"] not in routine_ids:
             return deepcopy(exercise)
 
-    for exercise in exercise_pool:
-        if exercise["id"] != current_id:
-            return deepcopy(exercise)
+    if candidates:
+        return deepcopy(candidates[0])
 
-    return deepcopy(exercise_pool[0])
+    current = _find_exercise_with_tag(exercise_pool, current_id, preferred_tag)
+    if current:
+        return deepcopy(current)
+
+    raise ValueError(f"No replacement exercise is available for plan tag {preferred_tag}.")
 
 
 def _load_exercise_pool() -> list[dict[str, Any]]:
@@ -402,6 +411,29 @@ def _select_exercises(exercise_pool: list[dict[str, Any]], exercise_ids: list[st
             break
 
     return exercises
+
+
+def _replacement_candidates(
+    exercise_pool: list[dict[str, Any]],
+    current_id: str | None,
+    plan_tag: str,
+) -> list[dict[str, Any]]:
+    return [
+        exercise
+        for exercise in exercise_pool
+        if exercise["id"] != current_id and plan_tag in exercise["plan_tags"]
+    ]
+
+
+def _find_exercise_with_tag(
+    exercise_pool: list[dict[str, Any]],
+    exercise_id: str | None,
+    plan_tag: str,
+) -> dict[str, Any] | None:
+    for exercise in exercise_pool:
+        if exercise["id"] == exercise_id and plan_tag in exercise["plan_tags"]:
+            return exercise
+    return None
 
 
 def _database_exercise_pool() -> list[dict[str, Any]]:

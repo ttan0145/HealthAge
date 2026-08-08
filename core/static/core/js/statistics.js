@@ -17,6 +17,11 @@
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
     'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
     '<polyline points="9 18 15 12 9 6"/></svg>';
+  const ICON_RUN =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+    '<circle cx="13" cy="4" r="2"/><path d="M9 20l2-6 3 2 2 5"/>' +
+    '<path d="M6 14l4-3 2 3 4-2"/></svg>';
 
   // The age and sex come from the profile the user filled in at step 1,
   // which the server holds in the session. Only forward them here if this
@@ -131,6 +136,29 @@
       } else {
         link.removeAttribute("href");
         link.style.cursor = "pointer";
+      }
+    });
+
+    applyStayFitAction(stats);
+  }
+
+  function applyStayFitAction(stats) {
+    if (!stats.top || !stats.top.slug) return;
+
+    waitFor("#next-action-area .action-card", (card) => {
+      card.setAttribute("href", `/stayfit/?risk=${encodeURIComponent(stats.top.slug)}`);
+      card.classList.remove("action-card--screening");
+      card.classList.add("action-card--routine");
+
+      const icon = card.querySelector(".action-icon");
+      if (icon) icon.innerHTML = ICON_RUN;
+
+      const title = card.querySelector(".action-title");
+      if (title) title.textContent = "Start a Stay Fit routine";
+
+      const subtitle = card.querySelector(".action-subtitle");
+      if (subtitle) {
+        subtitle.textContent = `Exercise suggestions matched to ${stats.top.cause.toLowerCase()}, your current top risk.`;
       }
     });
   }

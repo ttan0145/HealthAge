@@ -1,3 +1,4 @@
+from pathlib import Path
 from unittest.mock import patch
 
 from django.conf import settings
@@ -6,7 +7,14 @@ from django.urls import reverse
 
 from .health_data_gateway import _database_is_configured, _row_cause_name
 from .risk_engine import build_risk_result
-from .stayfit_api import build_stayfit_routine
+from .stayfit_api import build_stayfit_routine, get_replacement_exercise
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+
+def project_file(path: str) -> str:
+    return (PROJECT_ROOT / path).read_text(encoding="utf-8")
 
 
 class HealthDataGatewayConfigurationTests(SimpleTestCase):
@@ -100,6 +108,78 @@ class HealthDataGatewayConfigurationTests(SimpleTestCase):
 
         self.assertEqual(routine["exercises"][0]["id"], "db_step")
         self.assertEqual(routine["exercises"][1]["name"], "Database Breath")
+
+    @patch("core.stayfit_api._database_exercise_pool")
+    def test_stayfit_reshuffle_falls_back_only_to_matching_plan_tag(self, database_pool):
+        database_pool.return_value = [
+            {
+                "id": "db_unrelated",
+                "wger_id": 3,
+                "wger_uuid": None,
+                "name": "Database Unrelated",
+                "category": "Other",
+                "equipment": "none",
+                "muscles": [],
+                "sets": 1,
+                "reps": 1,
+                "duration_seconds": None,
+                "instructions": "Unrelated.",
+                "image_url": None,
+                "video_url": None,
+                "source_url": "https://wger.de/",
+                "source_note": "Loaded from test database pool.",
+                "difficulty": "beginner",
+                "plan_tags": ["unrelated"],
+            }
+        ]
+
+        exercise = get_replacement_exercise(
+            "deep_breathing",
+            plan_tag="respiratory_disease",
+            risk_key="respiratory_disease",
+        )
+
+        self.assertIn("respiratory_disease", exercise["plan_tags"])
+        self.assertNotEqual(exercise["id"], "db_unrelated")
+
+
+class StaticAcceptanceTests(SimpleTestCase):
+    def test_dashboard_exercise_action_uses_real_top_risk_slug(self):
+        dashboard_js = project_file("core/static/core/js/dashboard.js")
+        statistics_js = project_file("core/static/core/js/statistics.js")
+
+        self.assertIn('target: "/stayfit/?risk=heart-disease"', dashboard_js)
+        self.assertIn('/stayfit/?risk=${encodeURIComponent(stats.top.slug)}', statistics_js)
+        self.assertIn("Start a Stay Fit routine", statistics_js)
+
+    def test_navigation_labels_and_active_route_mapping(self):
+        nav_html = project_file("core/static/core/components/nav.html")
+        include_js = project_file("core/static/core/js/include.js")
+
+        for label in ["My Plan", "Stay Fit", "Find Specialist", "Data Sources"]:
+            self.assertIn(label, nav_html)
+        self.assertIn('data-nav-section="plan"', nav_html)
+        self.assertIn('data-nav-section="specialist"', nav_html)
+        self.assertIn('"/dashboard/"', include_js)
+        self.assertIn('"/readmore/"', include_js)
+        self.assertIn('"#specialist"', include_js)
+
+    def test_stayfit_static_hooks_cover_timer_guideline_and_modal_video_loop(self):
+        stayfit_html = project_file("core/templates/core/stayfit.html")
+        stayfit_js = project_file("core/static/core/js/stayfit.js")
+
+        for hook in [
+            'id="timer-display"',
+            'id="timer-toggle"',
+            'id="timer-reset"',
+            'id="timer-add-minute"',
+            'id="guideline-note"',
+            'id="exercise-modal-media"',
+        ]:
+            self.assertIn(hook, stayfit_html)
+        for video_flag in ["video.loop = true", "video.autoplay = true", "video.muted = true", "video.playsInline = true"]:
+            self.assertIn(video_flag, stayfit_js)
+        self.assertIn("renderGuidelineNote", stayfit_js)
 
 
 class HealthAgeFlowTests(TestCase):
@@ -224,8 +304,28 @@ class HealthAgeFlowTests(TestCase):
         self.assertEqual(len(data["exercises"]), 4)
         self.assertEqual(data["exercises"][0]["id"], "step_jack")
         self.assertEqual(len(data["risk_options"]), 5)
+        self.assertEqual(data["guideline"]["name"], "Garis Panduan Aktiviti Fizikal Malaysia")
+        self.assertIn("infosihat.moh.gov.my", data["guideline"]["url"])
         self.assertIn("guidance_tip", data)
         self.assertIn("wger", data["source"]["usage"])
+
+    def test_stayfit_routine_api_keeps_four_exercises_for_every_focus(self):
+        risks = [
+            "heart_disease",
+            "stroke",
+            "type_2_diabetes",
+            "respiratory_disease",
+            "cancer",
+            "lung-cancer",
+        ]
+
+        for risk in risks:
+            with self.subTest(risk=risk):
+                response = self.client.get(reverse("api_stayfit_routine"), {"risk": risk})
+                self.assertEqual(response.status_code, 200)
+                data = response.json()
+                self.assertEqual(len(data["exercises"]), 4)
+                self.assertGreaterEqual(data["duration_minutes"], 1)
 
     def test_stayfit_routine_api_returns_selected_risk_routine(self):
         response = self.client.get(reverse("api_stayfit_routine"), {"risk": "respiratory_disease"})
@@ -246,4 +346,11 @@ class HealthAgeFlowTests(TestCase):
         self.assertEqual(response.status_code, 200)
         exercise = response.json()["exercise"]
         self.assertNotEqual(exercise["id"], "deep_breathing")
+        self.assertIn("respiratory_disease", exercise["plan_tags"])
         self.assertIn("instructions", exercise)
+
+    def test_source_page_contains_specialist_anchor_for_navigation(self):
+        response = self.client.get(reverse("source"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'id="specialist"')
