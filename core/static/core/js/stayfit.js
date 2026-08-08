@@ -4,6 +4,7 @@ const stayfitState = {
   selectedRisk: "heart_disease",
   activeExerciseIndex: 0,
   carouselId: null,
+  isGuidanceHovered: false,
   remainingSeconds: 360,
   totalSeconds: 360,
   timerId: null,
@@ -13,6 +14,7 @@ const stayfitState = {
 document.addEventListener("DOMContentLoaded", () => {
   bindTimerControls();
   bindModalControls();
+  bindGuidanceCarouselControls();
   const params = new URLSearchParams(window.location.search);
   loadRoutine(params.get("risk") || stayfitState.selectedRisk);
 });
@@ -191,6 +193,7 @@ function showGuidanceExercise(index) {
 
 function startExerciseCarousel() {
   stopExerciseCarousel();
+  if (stayfitState.isGuidanceHovered) return;
   if (stayfitState.exercises.length < 2) return;
   stayfitState.carouselId = window.setInterval(() => {
     showGuidanceExercise(stayfitState.activeExerciseIndex + 1);
@@ -207,6 +210,44 @@ function updateActiveExerciseRow() {
   document.querySelectorAll(".exercise-row").forEach((row, index) => {
     row.classList.toggle("exercise-row--active", index === stayfitState.activeExerciseIndex);
   });
+}
+
+function bindGuidanceCarouselControls() {
+  const panel = document.querySelector(".guidance-panel");
+  if (!panel) return;
+
+  panel.tabIndex = 0;
+  panel.setAttribute("role", "button");
+  panel.setAttribute("aria-label", "Open current exercise demonstration");
+
+  panel.addEventListener("mouseenter", pauseGuidanceCarousel);
+  panel.addEventListener("focusin", pauseGuidanceCarousel);
+  panel.addEventListener("mouseleave", resumeGuidanceCarousel);
+  panel.addEventListener("focusout", resumeGuidanceCarousel);
+  panel.addEventListener("click", openCurrentGuidanceExercise);
+  panel.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openCurrentGuidanceExercise();
+    }
+  });
+}
+
+function pauseGuidanceCarousel() {
+  stayfitState.isGuidanceHovered = true;
+  stopExerciseCarousel();
+}
+
+function resumeGuidanceCarousel() {
+  stayfitState.isGuidanceHovered = false;
+  startExerciseCarousel();
+}
+
+function openCurrentGuidanceExercise() {
+  const exercise = stayfitState.exercises[stayfitState.activeExerciseIndex];
+  if (exercise) {
+    openExerciseModal(exercise);
+  }
 }
 
 function openExerciseModal(exercise) {

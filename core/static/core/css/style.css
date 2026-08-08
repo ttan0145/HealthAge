@@ -1482,6 +1482,15 @@ body {
   border: 1px solid rgba(31, 107, 72, 0.64);
   border-radius: var(--radius-lg);
   background: #ddf2eb;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.guidance-panel:hover,
+.guidance-panel:focus-visible {
+  border-color: var(--green-strong);
+  box-shadow: 0 12px 28px rgba(31, 107, 72, 0.14);
+  outline: none;
 }
 
 .guidance-media,
