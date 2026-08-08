@@ -5,6 +5,7 @@ const stayfitState = {
   activeExerciseIndex: 0,
   carouselId: null,
   isGuidanceHovered: false,
+  isModalOpen: false,
   remainingSeconds: 360,
   totalSeconds: 360,
   timerId: null,
@@ -193,6 +194,7 @@ function showGuidanceExercise(index) {
 
 function startExerciseCarousel() {
   stopExerciseCarousel();
+  if (stayfitState.isModalOpen) return;
   if (stayfitState.isGuidanceHovered) return;
   if (stayfitState.exercises.length < 2) return;
   stayfitState.carouselId = window.setInterval(() => {
@@ -251,6 +253,7 @@ function openCurrentGuidanceExercise() {
 }
 
 function openExerciseModal(exercise) {
+  stayfitState.isModalOpen = true;
   stopExerciseCarousel();
   const modal = document.getElementById("exercise-modal");
   const media = document.getElementById("exercise-modal-media");
@@ -335,6 +338,7 @@ function renderExerciseMedia(container, exercise, options = {}) {
 function closeExerciseModal() {
   document.getElementById("exercise-modal").hidden = true;
   document.body.classList.remove("modal-open");
+  stayfitState.isModalOpen = false;
   startExerciseCarousel();
 }
 
