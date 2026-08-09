@@ -232,6 +232,11 @@
 .rm-next .action-body { flex: 1; }
 .rm-next .action-chevron svg { color: var(--green-strong); }
 
+.rm-next--specialist { background: var(--badge-high-bg); }
+.rm-next--specialist .action-title { color: var(--badge-high-text); }
+.rm-next--specialist .action-icon svg { color: var(--badge-high-text); }
+.rm-next--specialist .action-chevron svg { color: var(--badge-high-text); }
+
 .rm-links {
   display: flex;
   flex-wrap: wrap;

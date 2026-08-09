@@ -25,11 +25,6 @@ GENERIC = {
     "can_change": [],
     "cannot_change": ["Your age", "Your sex"],
     "change_note": "",
-    "next_step": {
-        "title": "Talk to a doctor",
-        "detail": "A clinic visit is the right place to ask what this means "
-                  "for you specifically.",
-    },
 }
 
 RISK_DETAIL = {
@@ -66,13 +61,6 @@ RISK_DETAIL = {
         "change_note": "Age and sex put you in this group in the first place, "
                        "and neither can be changed. What the left hand list "
                        "decides is where you sit inside that group.",
-        "next_step": {
-            "title": "Book a screening",
-            "detail": "A screening gives you your blood pressure and "
-                      "cholesterol numbers, which is the only way to turn this "
-                      "from a population statistic into something about you "
-                      "specifically. Free under PeKaB40 if you qualify.",
-        },
     },
     "stroke": {
         "name": "Stroke",
@@ -105,12 +93,6 @@ RISK_DETAIL = {
         "change_note": "Blood pressure does most of the work in this risk, and "
                        "it is both measurable and treatable. That makes stroke "
                        "one of the more changeable causes on the list.",
-        "next_step": {
-            "title": "Get your blood pressure checked",
-            "detail": "It takes about a minute, it is free at any government "
-                      "clinic, and it is the single most useful number for "
-                      "this particular risk.",
-        },
     },
     "high-blood-pressure": {
         "name": "High blood pressure",
@@ -141,11 +123,6 @@ RISK_DETAIL = {
         "change_note": "This one is unusual on this list: it is almost entirely "
                        "manageable once you know your numbers. The hard part is "
                        "finding out, because nothing tells you.",
-        "next_step": {
-            "title": "Have it measured",
-            "detail": "Free at any government clinic and most pharmacies. "
-                      "There is no way to know without the cuff.",
-        },
     },
 
     # -- metabolic --------------------------------------------------
@@ -179,12 +156,6 @@ RISK_DETAIL = {
         "change_note": "Type 2 diabetes responds to daily habits more than "
                        "almost anything else on this list, and early on it can "
                        "sometimes be pushed back into the normal range.",
-        "next_step": {
-            "title": "Ask for a blood sugar test",
-            "detail": "Usually included in the same screening that covers "
-                      "blood pressure and cholesterol, so you can cover it in "
-                      "one visit.",
-        },
     },
 
     # -- respiratory ------------------------------------------------
@@ -218,12 +189,6 @@ RISK_DETAIL = {
         "cannot_change": ["Your age", "Long term lung or heart conditions"],
         "change_note": "Vaccination is the single most effective thing here, "
                        "and it is the part most often skipped.",
-        "next_step": {
-            "title": "Ask about vaccination",
-            "detail": "Government clinics can advise whether you qualify for "
-                      "the pneumococcal or flu vaccine based on your age and "
-                      "medical history.",
-        },
     },
     "chronic-lung-disease": {
         "name": "Chronic lung disease",
@@ -255,12 +220,6 @@ RISK_DETAIL = {
         "change_note": "Stopping smoking slows the decline at any stage, "
                        "including after a diagnosis. It is the only thing "
                        "shown to change the course of this condition.",
-        "next_step": {
-            "title": "Get a breathing test",
-            "detail": "A spirometry test at a clinic measures how well your "
-                      "lungs move air, and picks this up long before daily "
-                      "life is affected.",
-        },
     },
     "tuberculosis": {
         "name": "Respiratory tuberculosis",
@@ -292,11 +251,6 @@ RISK_DETAIL = {
                        "in Malaysia. This is one of the few causes on this "
                        "list where the outcome is almost entirely decided by "
                        "whether someone seeks care.",
-        "next_step": {
-            "title": "Get tested if the cough persists",
-            "detail": "Any government clinic can arrange a sputum test and "
-                      "chest X-ray. Both are free.",
-        },
     },
 
     # -- cancers ----------------------------------------------------
@@ -328,11 +282,6 @@ RISK_DETAIL = {
         "change_note": "Risk starts falling within a few years of stopping "
                        "smoking and keeps falling for a decade or more. "
                        "Quitting later still helps.",
-        "next_step": {
-            "title": "See a doctor about a persistent cough",
-            "detail": "Any cough lasting more than three weeks is worth having "
-                      "looked at, particularly if you smoke or used to.",
-        },
     },
     "liver-cancer": {
         "name": "Liver cancer",
@@ -363,11 +312,6 @@ RISK_DETAIL = {
         "change_note": "If you have never been tested for hepatitis B, that is "
                        "the highest value thing on this page. It is a simple "
                        "blood test and it is treatable.",
-        "next_step": {
-            "title": "Ask for a hepatitis B test",
-            "detail": "A single blood test at a government clinic. If you are "
-                      "negative and unvaccinated, vaccination is available.",
-        },
     },
     "bowel-cancer": {
         "name": "Bowel cancer",
@@ -398,11 +342,6 @@ RISK_DETAIL = {
         "change_note": "Screening changes the outcome here more than for most "
                        "cancers, because it can remove the growth before it "
                        "ever becomes cancer.",
-        "next_step": {
-            "title": "Ask about bowel screening",
-            "detail": "A stool test is usually the first step and can be done "
-                      "at home. Government clinics can arrange it.",
-        },
     },
     "breast-cancer": {
         "name": "Breast cancer",
@@ -432,11 +371,6 @@ RISK_DETAIL = {
         "change_note": "Nothing here prevents breast cancer outright. What the "
                        "left hand list changes is how early it gets found, "
                        "which is what decides the outcome.",
-        "next_step": {
-            "title": "Learn how to check, and ask about screening",
-            "detail": "Government clinics can show you what to feel for and "
-                      "advise when mammogram screening applies to you.",
-        },
     },
     "cervical-cancer": {
         "name": "Cervical cancer",
@@ -466,11 +400,6 @@ RISK_DETAIL = {
         "change_note": "Vaccination and screening together make this one of "
                        "the few cancers that can be almost entirely prevented. "
                        "Both are available through government clinics.",
-        "next_step": {
-            "title": "Book a cervical screening",
-            "detail": "Free at government clinics. HPV self sampling is also "
-                      "available in many places if you would prefer it.",
-        },
     },
     "ovarian-cancer": {
         "name": "Ovarian cancer",
@@ -499,11 +428,6 @@ RISK_DETAIL = {
         "change_note": "There is no screening programme for this, so the whole "
                        "difference is made by noticing a persistent pattern "
                        "and getting it checked rather than waiting.",
-        "next_step": {
-            "title": "See a doctor if symptoms persist",
-            "detail": "Bloating, feeling full quickly or pelvic pain lasting "
-                      "more than three weeks is worth having looked at.",
-        },
     },
     "leukaemia": {
         "name": "Leukaemia",
@@ -533,11 +457,6 @@ RISK_DETAIL = {
         "change_note": "Most risk factors for leukaemia are outside anyone's "
                        "control. What helps is not dismissing the early signs, "
                        "since a blood test settles the question quickly.",
-        "next_step": {
-            "title": "Ask for a blood test",
-            "detail": "A full blood count is a routine, inexpensive test and "
-                      "is the usual first step.",
-        },
     },
 
     # -- other ------------------------------------------------------
@@ -571,11 +490,6 @@ RISK_DETAIL = {
         "change_note": "Caught before scarring sets in, liver damage often "
                        "reverses. That window is the reason a blood test is "
                        "worth doing before symptoms appear.",
-        "next_step": {
-            "title": "Ask for a liver function test",
-            "detail": "A routine blood test. Worth requesting alongside a "
-                      "hepatitis B check if you have never had one.",
-        },
     },
     "transport-accidents": {
         "name": "Transport accidents",
@@ -605,12 +519,6 @@ RISK_DETAIL = {
         "change_note": "Unlike every disease on this list, this risk can drop "
                        "sharply today rather than over years. Helmet use and "
                        "speed are the two largest factors.",
-        "next_step": {
-            "title": "Check your helmet and your habits",
-            "detail": "A correctly fastened, undamaged helmet is the single "
-                      "most effective protection available for the riders who "
-                      "make up most of these deaths.",
-        },
     },
     "intentional-self-harm": {
         "name": "Intentional self-harm",

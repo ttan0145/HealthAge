@@ -126,6 +126,50 @@ def dashboard(request):
     )
 
 
+SPECIALIST_URL = "https://nsr.org.my/list11.asp"
+
+# Kept separate from the generic High/else rule below: this is a safety
+# carve-out, not a risk-level action, so it always shows regardless of share.
+CRISIS_SLUG = "intentional-self-harm"
+
+
+def _next_step_action(risk, here):
+    """What the 'What to do about it' card on the readmore page shows.
+
+    Only two outcomes for every cause: a High-share top risk points to
+    finding a specialist externally, anything else points at the Stay Fit
+    routine. The old per-cause advice (book a screening, ask about
+    vaccination, get a blood test, ...) is no longer used here so nothing
+    cause-specific like a vaccine recommendation shows up.
+
+    The self-harm crisis entry is the one exception, since that content is
+    safety information rather than a risk-level recommendation.
+    """
+    if risk["slug"] == CRISIS_SLUG:
+        return {
+            "title": risk["next_step"]["title"],
+            "detail": risk["next_step"]["detail"],
+            "href": "/dashboard/",
+            "specialist": False,
+        }
+
+    if here and here["level"] == "High":
+        return {
+            "title": "Find a specialist",
+            "detail": f"{risk['name']} is a high risk for you — this is worth "
+                      "discussing with a healthcare professional.",
+            "href": SPECIALIST_URL,
+            "specialist": True,
+        }
+
+    return {
+        "title": "Start a Stay Fit routine",
+        "detail": f"Exercise suggestions matched to {risk['name'].lower()}.",
+        "href": f"/stayfit/?risk={risk['slug']}",
+        "specialist": False,
+    }
+
+
 def readmore(request):
     """Detail page for one risk, chosen by ?risk=<slug>."""
     slug = request.GET.get("risk", DEFAULT_RISK)
@@ -150,6 +194,7 @@ def readmore(request):
             "here_rank": ordinal(here["rank"]) if here else None,
             "is_top_risk": bool(here and here["rank"] == 1),
             "other_causes": [cause for cause in stats["causes"] if cause["slug"] != slug],
+            "action": _next_step_action(risk, here),
         },
     )
 
