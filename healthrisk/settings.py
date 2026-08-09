@@ -68,6 +68,10 @@ ALLOWED_HOSTS = [
     "healthage-production.up.railway.app",
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://healthage-production.up.railway.app",
+]
+
 # Application definition
 
 INSTALLED_APPS = [
