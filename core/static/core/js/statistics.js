@@ -22,6 +22,11 @@
     'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
     '<circle cx="13" cy="4" r="2"/><path d="M9 20l2-6 3 2 2 5"/>' +
     '<path d="M6 14l4-3 2 3 4-2"/></svg>';
+  const ICON_STETHOSCOPE =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+    '<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M6 3H4"/><path d="M14 3h2"/>' +
+    '<path d="M10 13v3a5 5 0 0 0 10 0v-1"/><circle cx="20" cy="15" r="2"/></svg>';
 
   // The age and sex come from the profile the user filled in at step 1,
   // which the server holds in the session. Only forward them here if this
@@ -84,9 +89,7 @@
     }).join("");
   }
 
-  // Same shape as dashboard.js's old renderOtherRisks, but built from the
-  // live ranked causes instead of a fixed heart-disease/stroke/diabetes list,
-  // so a different age or gender shows a different set of cards.
+  //different age or gender shows a different set of cards. work for the other risk we checked
   function renderRiskCards(causes, stats) {
     return causes.map((cause) => {
       const name = escapeHtml(cause.cause);
@@ -200,11 +203,40 @@
   }
 
   function applyStayFitAction(stats) {
-    if (!stats.top || !stats.top.slug) return;
+    if (!stats.top) return;
+
+    // "High" means the top cause's share clears HIGH_SHARE in statistics.py.
+    // Moderate and Baseline both still point at the Stay Fit routine — only
+    // a High top risk switches the card over to "find a specialist".
+    const isHighRisk = stats.top.level === "High";
 
     waitFor("#next-action-area .action-card", (card) => {
+      card.classList.remove("action-card--routine", "action-card--screening", "action-card--specialist");
+
+      if (isHighRisk) {
+        card.setAttribute("href", "https://nsr.org.my/list11.asp");
+        card.setAttribute("target", "_blank");
+        card.setAttribute("rel", "noopener noreferrer");
+        card.classList.add("action-card--specialist");
+
+        const icon = card.querySelector(".action-icon");
+        if (icon) icon.innerHTML = ICON_STETHOSCOPE;
+
+        const title = card.querySelector(".action-title");
+        if (title) title.textContent = "Find a specialist";
+
+        const subtitle = card.querySelector(".action-subtitle");
+        if (subtitle) {
+          subtitle.textContent = `${stats.top.cause} is a high risk for you - this is worth discussing with a healthcare professional.`;
+        }
+        return;
+      }
+
+      if (!stats.top.slug) return;
+
+      card.removeAttribute("target");
+      card.removeAttribute("rel");
       card.setAttribute("href", `/stayfit/?risk=${encodeURIComponent(stats.top.slug)}`);
-      card.classList.remove("action-card--screening");
       card.classList.add("action-card--routine");
 
       const icon = card.querySelector(".action-icon");

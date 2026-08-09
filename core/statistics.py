@@ -145,11 +145,19 @@ def cause_in_group(stats, slug):
 
 
 def band_label(gender, band):
-    """'men aged 41 to 59', 'women aged 60 and over'."""
+    """'men aged 41 to 59', 'women aged 60 and over'.
+
+    The "15-40" bucket is the workbook's own published band and must stay
+    that way for the database lookup in band_for_age/_fetch_rows to keep
+    matching. But this app's own profile step only accepts ages 18-100
+    (see validate_profile), so no user in that bucket is actually under 18.
+    Only the display wording is adjusted here, not the underlying band.
+    """
     group = "men" if gender == "Male" else "women"
     if band.endswith("+"):
         return f"{group} aged {band[:-1]} and over"
-    return f"{group} aged {band.replace('-', ' to ')}"
+    display_band = "18-40" if band == "15-40" else band
+    return f"{group} aged {display_band.replace('-', ' to ')}"
 
 
 NUMBER_WORDS = {2: "two", 3: "three", 4: "four", 5: "five", 6: "six",

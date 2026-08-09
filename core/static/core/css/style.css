@@ -298,6 +298,7 @@ body {
 }
 .action-card--routine { border-color: var(--green-strong); }
 .action-card--screening { border-color: var(--orange); }
+.action-card--specialist { border-color: var(--badge-high-text); }
 .action-icon {
   width: 56px;
   height: 56px;
@@ -310,11 +311,13 @@ body {
 .action-icon svg { width: 26px; height: 26px; }
 .action-card--routine .action-icon { background: var(--green-bg); color: var(--green-strong); }
 .action-card--screening .action-icon { background: var(--orange-bg); color: var(--orange); }
+.action-card--specialist .action-icon { background: var(--badge-high-bg); color: var(--badge-high-text); }
 .action-body { flex: 1; }
 .action-title { margin: 0 0 4px; font-size: 20px; font-weight: 700; color: var(--ink); }
 .action-subtitle { margin: 0; font-size: 15.5px; color: var(--gray-muted); }
 .action-card--routine .action-chevron { color: var(--green-strong); }
 .action-card--screening .action-chevron { color: var(--orange); }
+.action-card--specialist .action-chevron { color: var(--badge-high-text); }
 
 /* Secondary column panel */
 .panel {
