@@ -179,6 +179,8 @@ class StaticAcceptanceTests(SimpleTestCase):
             'id="guideline-note"',
             'id="exercise-modal-media"',
             'id="intensity-options"',
+            "/static/core/css/style.css?v=",
+            "/static/core/js/stayfit.js?v=",
         ]:
             self.assertIn(hook, stayfit_html)
         for video_flag in ["video.loop = true", "video.autoplay = true", "video.muted = true", "video.playsInline = true"]:
@@ -186,17 +188,29 @@ class StaticAcceptanceTests(SimpleTestCase):
         self.assertIn("renderGuidelineNote", stayfit_js)
         self.assertIn("renderIntensityOptions", stayfit_js)
         self.assertIn("renderExerciseIllustration", stayfit_js)
-        self.assertIn("const TIMER_MIN_SECONDS = 60;", stayfit_js)
+        self.assertIn('id="timer-minutes" type="number" min="0"', stayfit_html)
+        self.assertIn("const TIMER_MIN_SECONDS = 1;", stayfit_js)
+        self.assertIn('clampNumber(document.getElementById("timer-minutes").value, 0, 60)', stayfit_js)
+        self.assertNotIn('addEventListener("input", syncTimerFromInputs)', stayfit_js)
+        self.assertIn("advanceToNextExercise();", stayfit_js)
+        self.assertIn("showGuidanceExercise(stayfitState.activeExerciseIndex + 1);", stayfit_js)
+        self.assertIn('ring.style.setProperty("--timer-progress"', stayfit_js)
+        self.assertIn("defaultSeconds: 360", stayfit_js)
+        self.assertIn("setDefaultTimerDuration(seconds);", stayfit_js)
+        self.assertIn("setTimerDuration(stayfitState.defaultSeconds);", stayfit_js)
+        self.assertIn("const TIMER_INTERRUPT_SELECTOR", stayfit_js)
+        self.assertIn("bindTimerInterruptionControls();", stayfit_js)
+        self.assertIn('control.id === "timer-toggle"', stayfit_js)
+        self.assertIn("pauseTimer();", stayfit_js)
         self.assertIn("Math.min(max, Math.max(min, number))", stayfit_js)
-        self.assertIn("background: var(--green-strong);", stayfit_css)
-        self.assertNotIn("conic-gradient(var(--green-strong)", stayfit_css)
+        self.assertIn("background: conic-gradient(var(--green-strong) var(--timer-progress), var(--green-bg) 0);", stayfit_css)
 
     def test_stayfit_exercise_order_is_user_directed_without_list_modal(self):
         stayfit_js = project_file("core/static/core/js/stayfit.js")
 
-        self.assertNotIn("showGuidanceExercise(stayfitState.activeExerciseIndex + 1)", stayfit_js)
         self.assertNotIn("startExerciseCarousel();", stayfit_js)
-        self.assertIn("stayfitState.remainingSeconds = stayfitState.totalSeconds;", stayfit_js)
+        self.assertIn("advanceToNextExercise();\n  stayfitState.remainingSeconds = stayfitState.totalSeconds;", stayfit_js)
+        self.assertIn("stayfitState.defaultSeconds = safeTotal;", stayfit_js)
 
         list_click_block = (
             'detailButton.addEventListener("click", () => {\n'

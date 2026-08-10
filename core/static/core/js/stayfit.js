@@ -7,14 +7,16 @@ const stayfitState = {
   carouselId: null,
   isGuidanceHovered: false,
   isModalOpen: false,
+  defaultSeconds: 360,
   remainingSeconds: 360,
   totalSeconds: 360,
   timerId: null,
   isRunning: false,
 };
 
-const TIMER_MIN_SECONDS = 60;
+const TIMER_MIN_SECONDS = 1;
 const TIMER_MAX_SECONDS = 3600;
+const TIMER_INTERRUPT_SELECTOR = "a[href], button, input, select, textarea, video, [role='button'], [data-modal-close]";
 
 const EXERCISE_VISUALS = {
   step_jack: "Step out with arms rising, then return to centre.",
@@ -47,6 +49,7 @@ const EXERCISE_VISUALS = {
 
 document.addEventListener("DOMContentLoaded", () => {
   bindTimerControls();
+  bindTimerInterruptionControls();
   bindModalControls();
   bindGuidanceCarouselControls();
   const params = new URLSearchParams(window.location.search);
@@ -109,7 +112,7 @@ function applyRoutine(routine) {
   renderGuidelineNote(routine);
 
   const seconds = Math.max(60, Number(routine.duration_minutes || 6) * 60);
-  setTimerDuration(seconds);
+  setDefaultTimerDuration(seconds);
   renderRiskOptions(routine.risk_options || [], stayfitState.selectedRisk);
   renderIntensityOptions(routine.level_options || [], stayfitState.selectedLevel);
   renderExercises();
@@ -503,8 +506,17 @@ function bindTimerControls() {
   document.getElementById("timer-reset").addEventListener("click", resetTimer);
   document.getElementById("timer-minutes").addEventListener("change", syncTimerFromInputs);
   document.getElementById("timer-seconds").addEventListener("change", syncTimerFromInputs);
-  document.getElementById("timer-minutes").addEventListener("input", syncTimerFromInputs);
-  document.getElementById("timer-seconds").addEventListener("input", syncTimerFromInputs);
+}
+
+function bindTimerInterruptionControls() {
+  document.addEventListener("click", (event) => {
+    if (!stayfitState.isRunning) return;
+
+    const control = event.target.closest(TIMER_INTERRUPT_SELECTOR);
+    if (!control || control.id === "timer-toggle") return;
+
+    pauseTimer();
+  }, true);
 }
 
 function toggleTimer() {
@@ -543,24 +555,29 @@ function completeTimer() {
   window.clearInterval(stayfitState.timerId);
   stayfitState.timerId = null;
   stayfitState.isRunning = false;
-  stayfitState.remainingSeconds = stayfitState.totalSeconds;
   document.getElementById("timer-toggle").textContent = "Start";
-  document.getElementById("timer-status").textContent = "Workout complete. Timer reset.";
+  advanceToNextExercise();
+  stayfitState.remainingSeconds = stayfitState.totalSeconds;
+  document.getElementById("timer-status").textContent = "Workout complete. Next exercise ready.";
   updateTimerDisplay();
+}
+
+function advanceToNextExercise() {
+  if (!stayfitState.exercises.length) return;
+  showGuidanceExercise(stayfitState.activeExerciseIndex + 1);
 }
 
 function resetTimer() {
   window.clearInterval(stayfitState.timerId);
   stayfitState.timerId = null;
   stayfitState.isRunning = false;
-  stayfitState.remainingSeconds = stayfitState.totalSeconds;
+  setTimerDuration(stayfitState.defaultSeconds);
   document.getElementById("timer-toggle").textContent = "Start";
   document.getElementById("timer-status").textContent = "Ready when you are.";
-  updateTimerDisplay();
 }
 
 function syncTimerFromInputs() {
-  const minutes = clampNumber(document.getElementById("timer-minutes").value, 1, 60);
+  const minutes = clampNumber(document.getElementById("timer-minutes").value, 0, 60);
   const seconds = clampNumber(document.getElementById("timer-seconds").value, 0, 59);
   setTimerDuration(minutes * 60 + seconds);
 }
@@ -574,10 +591,26 @@ function setTimerDuration(totalSeconds) {
   updateTimerDisplay();
 }
 
+function setDefaultTimerDuration(totalSeconds) {
+  const safeTotal = clampNumber(totalSeconds, TIMER_MIN_SECONDS, TIMER_MAX_SECONDS);
+  stayfitState.defaultSeconds = safeTotal;
+  setTimerDuration(safeTotal);
+}
+
 function updateTimerDisplay() {
   const minutes = Math.floor(stayfitState.remainingSeconds / 60);
   const seconds = stayfitState.remainingSeconds % 60;
   document.getElementById("timer-display").textContent = `${pad(minutes)}:${pad(seconds)}`;
+  updateTimerProgress();
+}
+
+function updateTimerProgress() {
+  const ring = document.querySelector(".timer-ring");
+  if (!ring) return;
+  const progress = stayfitState.totalSeconds > 0
+    ? (stayfitState.remainingSeconds / stayfitState.totalSeconds) * 100
+    : 0;
+  ring.style.setProperty("--timer-progress", `${clampNumber(progress, 0, 100)}%`);
 }
 
 function formatExerciseDose(exercise) {
