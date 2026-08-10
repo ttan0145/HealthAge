@@ -169,6 +169,7 @@ class StaticAcceptanceTests(SimpleTestCase):
     def test_stayfit_static_hooks_cover_timer_guideline_and_modal_video_loop(self):
         stayfit_html = project_file("core/templates/core/stayfit.html")
         stayfit_js = project_file("core/static/core/js/stayfit.js")
+        stayfit_css = project_file("core/static/core/css/style.css")
 
         for hook in [
             'id="timer-display"',
@@ -185,12 +186,17 @@ class StaticAcceptanceTests(SimpleTestCase):
         self.assertIn("renderGuidelineNote", stayfit_js)
         self.assertIn("renderIntensityOptions", stayfit_js)
         self.assertIn("renderExerciseIllustration", stayfit_js)
+        self.assertIn("const TIMER_MIN_SECONDS = 60;", stayfit_js)
+        self.assertIn("Math.min(max, Math.max(min, number))", stayfit_js)
+        self.assertIn("background: var(--green-strong);", stayfit_css)
+        self.assertNotIn("conic-gradient(var(--green-strong)", stayfit_css)
 
     def test_stayfit_exercise_order_is_user_directed_without_list_modal(self):
         stayfit_js = project_file("core/static/core/js/stayfit.js")
 
         self.assertNotIn("showGuidanceExercise(stayfitState.activeExerciseIndex + 1)", stayfit_js)
         self.assertNotIn("startExerciseCarousel();", stayfit_js)
+        self.assertIn("stayfitState.remainingSeconds = stayfitState.totalSeconds;", stayfit_js)
 
         list_click_block = (
             'detailButton.addEventListener("click", () => {\n'

@@ -72,9 +72,14 @@ EXERCISE_POOL = [
             "switch sides."
         ),
         "image_url": "https://wger.de/media/exercise-images/1572/3d14e761-a73d-49da-8804-f3016a7573ff.png",
-        "video_url": None,
+        "video_url": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Muscle_Strengthening_at_Home_-_Superman.webm",
         "source_url": "https://wger.de/api/v2/exerciseinfo/1572/",
-        "source_note": "Exercise name, category, equipment, image and base instructions are sourced from wger.",
+        "source_note": (
+            "Exercise name, category, equipment, image and base instructions are "
+            "sourced from wger. Demonstration video is the CDC public-domain "
+            "Superman video from Wikimedia Commons and shows a related "
+            "floor-based posterior-chain movement."
+        ),
         "difficulty": "beginner",
         "plan_tags": [
             "cardio_core",
@@ -103,9 +108,13 @@ EXERCISE_POOL = [
             "start position."
         ),
         "image_url": "https://wger.de/media/exercise-images/1551/a6a9e561-3965-45c6-9f2b-ee671e1a3a45.png",
-        "video_url": None,
+        "video_url": "https://upload.wikimedia.org/wikipedia/commons/1/18/Muscle_Strengthening_at_Home_-_Push-ups.webm",
         "source_url": "https://wger.de/api/v2/exerciseinfo/1551/",
-        "source_note": "Adapted as a low-impact variation of the wger Push-Up entry for the MVP routine.",
+        "source_note": (
+            "Adapted as a low-impact wall variation of the wger Push-Up entry. "
+            "Demonstration video is the CDC public-domain push-up video from "
+            "Wikimedia Commons and shows a similar upper-body pushing pattern."
+        ),
         "difficulty": "beginner",
         "plan_tags": ["cardio_core", "strength", "heart_disease", "type_2_diabetes"],
     },
@@ -147,9 +156,13 @@ EXERCISE_POOL = [
             "chest and belly expand, then breathe out steadily."
         ),
         "image_url": None,
-        "video_url": None,
+        "video_url": "https://upload.wikimedia.org/wikipedia/commons/9/95/Diaphragmatic_breathing_1.ogv",
         "source_url": "https://wger.de/api/v2/exerciseinfo/1591/",
-        "source_note": "Exercise name and base concept are sourced from wger.",
+        "source_note": (
+            "Exercise name and base concept are sourced from wger. Demonstration "
+            "video is the CC0 diaphragmatic breathing animation from Wikimedia "
+            "Commons."
+        ),
         "difficulty": "beginner",
         "plan_tags": ["mobility", "cardio_core", "heart_disease", "respiratory_disease", "cancer"],
     },
@@ -213,9 +226,13 @@ EXERCISE_POOL = [
             "you lightly touch the chair, then stand up again without rushing."
         ),
         "image_url": None,
-        "video_url": None,
+        "video_url": "https://upload.wikimedia.org/wikipedia/commons/a/ae/Muscle_Strengthening_at_Home_-_Half_squat.webm",
         "source_url": "https://infosihat.moh.gov.my/multimedia/garis-panduan/item/garis-panduan-aktiviti-fizikal-malaysia-2.html",
-        "source_note": "HealthAge curated beginner movement aligned with the Malaysian physical activity guideline.",
+        "source_note": (
+            "Exercise data is HealthAge curated. Demonstration video is the CDC "
+            "public-domain 'Muscle Strengthening at Home - Half squat' video "
+            "from Wikimedia Commons."
+        ),
         "difficulty": "beginner",
         "plan_tags": ["strength", "cardio_core", "heart_disease", "type_2_diabetes", "cancer"],
     },
@@ -279,9 +296,13 @@ EXERCISE_POOL = [
             "lower leg is nearly level, pause, then lower and switch sides."
         ),
         "image_url": None,
-        "video_url": None,
+        "video_url": "https://upload.wikimedia.org/wikipedia/commons/1/13/Muscle_Strengthening_at_the_Gym_-_Leg_Extension.webm",
         "source_url": "https://infosihat.moh.gov.my/multimedia/garis-panduan/item/garis-panduan-aktiviti-fizikal-malaysia-2.html",
-        "source_note": "HealthAge curated beginner movement aligned with the Malaysian physical activity guideline.",
+        "source_note": (
+            "Exercise data is HealthAge curated. Demonstration video is the CDC "
+            "public-domain leg extension video from Wikimedia Commons and shows "
+            "a similar knee-extension movement pattern."
+        ),
         "difficulty": "beginner",
         "plan_tags": ["strength", "mobility", "stroke", "type_2_diabetes", "cancer"],
     },
@@ -614,7 +635,7 @@ EXERCISE_POOL = [
         "image_url": "https://wger.de/media/exercise-images/570/68b4a33f-40f1-4dda-b56c-a2e20ed13903.jpg",
         "video_url": "https://wger.de/media/exercise-video/570/bd1f14a3-9d2b-4ec0-b6b9-e82d739f7e60.MOV",
         "source_url": "https://wger.de/api/v2/exerciseinfo/570/",
-        "source_note": "Exercise name, category, muscles, equipment, image and video are sourced from wger; instructions are adapted for the HealthAge MVP.",
+        "source_note": "Exercise name, category, muscles, equipment, image and video are sourced from wger.",
         "difficulty": "beginner",
         "plan_tags": ["mobility", "heart_disease", "stroke", "respiratory_disease", "cancer"],
     },

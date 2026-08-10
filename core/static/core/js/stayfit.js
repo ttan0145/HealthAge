@@ -13,6 +13,9 @@ const stayfitState = {
   isRunning: false,
 };
 
+const TIMER_MIN_SECONDS = 60;
+const TIMER_MAX_SECONDS = 3600;
+
 const EXERCISE_VISUALS = {
   step_jack: "Step out with arms rising, then return to centre.",
   bird_dog: "Reach one arm and the opposite leg while keeping the core steady.",
@@ -500,6 +503,8 @@ function bindTimerControls() {
   document.getElementById("timer-reset").addEventListener("click", resetTimer);
   document.getElementById("timer-minutes").addEventListener("change", syncTimerFromInputs);
   document.getElementById("timer-seconds").addEventListener("change", syncTimerFromInputs);
+  document.getElementById("timer-minutes").addEventListener("input", syncTimerFromInputs);
+  document.getElementById("timer-seconds").addEventListener("input", syncTimerFromInputs);
 }
 
 function toggleTimer() {
@@ -538,9 +543,9 @@ function completeTimer() {
   window.clearInterval(stayfitState.timerId);
   stayfitState.timerId = null;
   stayfitState.isRunning = false;
-  stayfitState.remainingSeconds = 0;
+  stayfitState.remainingSeconds = stayfitState.totalSeconds;
   document.getElementById("timer-toggle").textContent = "Start";
-  document.getElementById("timer-status").textContent = "Workout complete.";
+  document.getElementById("timer-status").textContent = "Workout complete. Timer reset.";
   updateTimerDisplay();
 }
 
@@ -561,10 +566,11 @@ function syncTimerFromInputs() {
 }
 
 function setTimerDuration(totalSeconds) {
-  stayfitState.totalSeconds = totalSeconds;
-  stayfitState.remainingSeconds = totalSeconds;
-  document.getElementById("timer-minutes").value = Math.floor(totalSeconds / 60);
-  document.getElementById("timer-seconds").value = totalSeconds % 60;
+  const safeTotal = clampNumber(totalSeconds, TIMER_MIN_SECONDS, TIMER_MAX_SECONDS);
+  stayfitState.totalSeconds = safeTotal;
+  stayfitState.remainingSeconds = safeTotal;
+  document.getElementById("timer-minutes").value = Math.floor(safeTotal / 60);
+  document.getElementById("timer-seconds").value = safeTotal % 60;
   updateTimerDisplay();
 }
 

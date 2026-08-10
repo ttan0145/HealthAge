@@ -1398,7 +1398,7 @@ body {
   display: grid;
   place-content: center;
   border-radius: 50%;
-  background: conic-gradient(var(--green-strong) 0 24%, var(--green-bg) 24% 100%);
+  background: var(--green-strong);
   position: relative;
 }
 
